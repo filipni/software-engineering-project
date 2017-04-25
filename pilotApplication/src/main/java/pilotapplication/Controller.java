@@ -27,7 +27,7 @@ public class Controller implements Initializable
 	
 	// File path for the configuration file used when creating the submissionService
 	public  final String CONFIG_FILE_NAME = "portcdm.conf";
-	public  final String CONFIG_FILE_DIR = "";
+	public  final String CONFIG_FILE_DIR = "portcdm";
 	
 	// These objects will be our interface to PortCDM 
 	private SubmissionService submissionService;
@@ -49,22 +49,10 @@ public class Controller implements Initializable
 						return !objectObjectEntry.getKey().toString().equals("pass");
 				}	
 		});
-		config.reload();
+		config.reload();		
 		
-		Map<String, String> settings = config.show();		
-		if (settings.size() == 0) {
-			System.out.println("No entries found.");
-		}
-		else {
-			for (Map.Entry<String, String> e : settings.entrySet()){
-				System.out.println("Key: " + e.getKey() + ", Value: " + e.getValue());
-			}
-		}
-			
-		System.out.println(System.getProperty("user.dir"));
-		
-		//submissionService = new SubmissionService();
-		//submissionService.addConnectors(config);
+		submissionService = new SubmissionService();
+		submissionService.addConnectors(config);
 	}
 	
 	private void initMessageBrokerAPI(String baseUrl, int timeout) {
