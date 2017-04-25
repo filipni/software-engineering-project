@@ -35,6 +35,16 @@
   		<artifactId>common</artifactId>
   		<version>LATEST</version>
   	</dependency>
+  	<dependency>
+ 		<groupId>eu.portcdm</groupId>
+ 		<artifactId>message-broker-dto</artifactId>
+ 		<version>1.5-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+ 		<groupId>eu.portcdm</groupId>
+ 		<artifactId>message-broker-client</artifactId>
+ 		<version>1.5-SNAPSHOT</version>
+		</dependency>
   </dependencies>
   
 </project>
