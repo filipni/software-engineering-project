@@ -8,8 +8,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class Main extends Application {
 	@Override
-	public void start(Stage primaryStage) throws Exception
-	{
+	public void start(Stage primaryStage) throws Exception {
 		AnchorPane root = FXMLLoader.load(getClass().getResource("application.fxml"));
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

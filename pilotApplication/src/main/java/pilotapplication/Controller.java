@@ -49,6 +49,7 @@ public class Controller implements Initializable
 		initPortCallsAPI(BASE_URL_VM + "dmp", 20000);
 		
 		// Try to read some portcalls from PortCDM
+		/*
 		List<PortCallSummary> portcalls = null;
 		try {
 			portcalls = portCallsAPI.getAllPortCalls(10);
@@ -59,7 +60,7 @@ public class Controller implements Initializable
 		
 		for(PortCallSummary pc : portcalls) {
 			System.out.println(pc.getId());
-		}
+		}*/
 	}
 	
 	private void initSubmissionService(String configFileName, String configFileDir) {
@@ -132,12 +133,7 @@ public class Controller implements Initializable
 		LocalTime dt = new LocalTime();
 		LocalTime klockslag = dt.plusMinutes(result);
 				
-		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
-<<<<<<< HEAD
-		+ "Klockslag: " + klockslag);
-=======
-		+ "Klockslag: " + klockslag);		 
->>>>>>> branch 'master' of https://github.com/filipni/Software-Engineering-Project.git
+		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n" + "Klockslag: " + klockslag);
 	}
 	
 	private double calculateDistance(double distance, double speed) {
