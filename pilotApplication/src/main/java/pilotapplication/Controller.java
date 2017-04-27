@@ -1,16 +1,17 @@
 package pilotapplication;
 
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
 
 import eu.portcdm.mb.client.MessageQueueServiceApi;
+import eu.portcdm.client.ApiException;
+import eu.portcdm.client.service.PortcallsApi;
+import eu.portcdm.dto.PortCallSummary;
 
 import se.viktoria.stm.portcdm.connector.common.SubmissionService;
 import se.viktoria.util.Configuration;
@@ -37,11 +38,26 @@ public class Controller implements Initializable
 	// These objects will be our interface to PortCDM 
 	private SubmissionService submissionService;
 	private MessageQueueServiceApi messageBrokerAPI;
+	private PortcallsApi portCallsAPI;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {		
 		initSubmissionService(CONFIG_FILE_NAME, CONFIG_FILE_DIR);	
 		initMessageBrokerAPI(BASE_URL_VM + "mb", 20000);
+		initPortCallsAPI(BASE_URL_VM + "dmp", 20000);
+		
+		// Try to read some portcalls from PortCDM
+		List<PortCallSummary> portcalls = null;
+		try {
+			portcalls = portCallsAPI.getAllPortCalls(10);
+		} catch (ApiException e) {
+			System.out.println(e.getCode() + " " + e.getMessage());
+			System.out.println(e.getResponseBody());
+		}
+		
+		for(PortCallSummary pc : portcalls) {
+			System.out.println(pc.getId());
+		}
 	}
 	
 	private void initSubmissionService(String configFileName, String configFileDir) {
@@ -67,6 +83,17 @@ public class Controller implements Initializable
 		messageBrokerAPI = new MessageQueueServiceApi(connectorClient);
 	}
 	
+	private void initPortCallsAPI(String baseUrl, int timeout) {
+		eu.portcdm.client.ApiClient connectorClient = new eu.portcdm.client.ApiClient();
+		connectorClient.setBasePath(baseUrl);
+		connectorClient.setConnectTimeout(timeout);
+		connectorClient.addDefaultHeader("X-PortCDM-UserId", "porter");
+        connectorClient.addDefaultHeader("X-PortCDM-Password", "porter");
+        connectorClient.addDefaultHeader("X-PortCDM-APIKey", "pilot");
+		portCallsAPI = new PortcallsApi(connectorClient);				
+	}
+	
+	
 	@FXML
 	private Button calcButton;
 	
@@ -86,12 +113,9 @@ public class Controller implements Initializable
 		
 		LocalTime dt = new LocalTime();
 		LocalTime klockslag = dt.plusMinutes(result);
-		
-		
+				
 		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
-		+ "Klockslag: " + klockslag);
-		
-		 
+		+ "Klockslag: " + klockslag);		 
 	}
 	
 	private double calculateDistance(double distance, double speed) {
