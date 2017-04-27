@@ -1,9 +1,14 @@
 package pilotapplication;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
 
 import eu.portcdm.mb.client.MessageQueueServiceApi;
 
@@ -76,13 +81,21 @@ public class Controller implements Initializable
 	
 	public void buttonHandler(ActionEvent event) {
 		double distance = Double.parseDouble(distTextField.getText());
-		double speed = Double.parseDouble(speedTextField.getText())*1852; //1 knop=1.852km/h = 1852m/h
-		double result = calculateDistance(distance, speed);
-		resultText.setText("Anländer om " + Double.toString(result) + "h");
+		double speed = Double.parseDouble(speedTextField.getText()); 
+		int result = (int) calculateDistance(distance, speed);
+		
+		LocalTime dt = new LocalTime();
+		LocalTime klockslag = dt.plusMinutes(result);
+		
+		
+		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
+		+ "Klockslag: " + klockslag);
+		
+		 
 	}
 	
 	private double calculateDistance(double distance, double speed) {
-		return distance/speed;
+		return distance/speed*60; // Tid=distans/hastighet*60 ex. 10M/12knop*60 = 50min
 	}
 	
 	
