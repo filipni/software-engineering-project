@@ -21,6 +21,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
@@ -68,10 +70,10 @@ public class Controller implements Initializable
 	}
 	
 	@FXML
-	private Button calcButton;
+	private Button incButton, calcButton;
 	
-	@FXML
-	private Label distLabel, speedLabel, resultLabel;
+	/*@FXML
+	private Label distLabel; */
 	
 	@FXML
 	private Text resultText;
@@ -79,9 +81,25 @@ public class Controller implements Initializable
 	@FXML
 	private TextField distTextField, speedTextField;
 	
-	public void buttonHandler(ActionEvent event) {
+	@FXML
+	private Rectangle rectangle1; 
+	
+	@FXML
+	private ImageView logo; 
+	
+	public void incButtonHandler(ActionEvent event) {
+		
+		distTextField.setOpacity(1);	
+		speedTextField.setOpacity(1); 
+		calcButton.setOpacity(1); 
+		rectangle1.setOpacity(1);
+	}
+	
+	public void calcButtonHandler(ActionEvent event) {
+		resultText.setOpacity(1);
+		
 		double distance = Double.parseDouble(distTextField.getText());
-		double speed = Double.parseDouble(speedTextField.getText()); 
+		double speed = Double.parseDouble(speedTextField.getText());  
 		int result = (int) calculateDistance(distance, speed);
 		
 		LocalTime dt = new LocalTime();
@@ -90,8 +108,6 @@ public class Controller implements Initializable
 		
 		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
 		+ "Klockslag: " + klockslag);
-		
-		 
 	}
 	
 	private double calculateDistance(double distance, double speed) {
