@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -96,34 +97,32 @@ public class Controller implements Initializable
 		portCallsAPI = new PortcallsApi(connectorClient);				
 	}
 	
-	
 	@FXML
-	private Button incButton, calcButton;
+	private ImageView img; 
+	/*@FXML
+	private Button incButton, calcButton;*/
 	
 	/*@FXML
 	private Label distLabel; */
 	
-	@FXML
-	private Text resultText;
+	//@FXML
+	//private Text resultText;
 	
-	@FXML
-	private TextField distTextField, speedTextField;
+	/*@FXML
+	private TextField distTextField, speedTextField;*/
 	
-	@FXML
-	private Rectangle rectangle1; 
+	/*@FXML
+	private Rectangle rectangle1;*/  
 	
-	@FXML
-	private ImageView logo; 
-	
-	public void incButtonHandler(ActionEvent event) {
+	/*public void incButtonHandler(ActionEvent event) {
 		
 		distTextField.setOpacity(1);	
 		speedTextField.setOpacity(1); 
 		calcButton.setOpacity(1); 
 		rectangle1.setOpacity(1);
-	}
+	}*/
 	
-	public void calcButtonHandler(ActionEvent event) {
+	/*public void calcButtonHandler(ActionEvent event) {
 		resultText.setOpacity(1);
 		
 		double distance = Double.parseDouble(distTextField.getText());
@@ -134,7 +133,7 @@ public class Controller implements Initializable
 		LocalTime klockslag = dt.plusMinutes(result);
 				
 		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n" + "Klockslag: " + klockslag);
-	}
+	}*/
 	
 	private double calculateDistance(double distance, double speed) {
 		return distance/speed*60; // Tid=distans/hastighet*60 ex. 10M/12knop*60 = 50min
