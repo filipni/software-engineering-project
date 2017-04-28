@@ -99,31 +99,41 @@ public class Controller implements Initializable
 	
 	@FXML
 	private ImageView img; 
-	/*@FXML
-	private Button incButton, calcButton;*/
 	
-	/*@FXML
-	private Label distLabel; */
+	@FXML
+	private Button incButton, depButton, calcButton;
 	
-	//@FXML
-	//private Text resultText;
+	@FXML
+	private TextField distTextField, speedTextField;
 	
-	/*@FXML
-	private TextField distTextField, speedTextField;*/
+	@FXML
+	private Rectangle rectangle1, rectangle2;
 	
-	/*@FXML
-	private Rectangle rectangle1;*/  
+	@FXML
+	private Text resulttxt; 
 	
-	/*public void incButtonHandler(ActionEvent event) {
+	public void incButtonHandler(ActionEvent event) {
 		
-		distTextField.setOpacity(1);	
-		speedTextField.setOpacity(1); 
-		calcButton.setOpacity(1); 
-		rectangle1.setOpacity(1);
-	}*/
+		distTextField.setOpacity(1);
+		speedTextField.setOpacity(1);
+		calcButton.setOpacity(1);
+		resulttxt.setOpacity(1);
+		rectangle1.setOpacity(0.1);
+		rectangle2.setOpacity(0);
+		
+	}
 	
-	/*public void calcButtonHandler(ActionEvent event) {
-		resultText.setOpacity(1);
+	public void depButtonHandler(ActionEvent event) {
+		
+		distTextField.setOpacity(0);
+		speedTextField.setOpacity(0);
+		calcButton.setOpacity(0);
+		resulttxt.setOpacity(0);
+		rectangle1.setOpacity(0);
+		rectangle2.setOpacity(0.1);
+	}	
+	
+	public void calcButtonHandler(ActionEvent event) {
 		
 		double distance = Double.parseDouble(distTextField.getText());
 		double speed = Double.parseDouble(speedTextField.getText());  
@@ -132,12 +142,11 @@ public class Controller implements Initializable
 		LocalTime dt = new LocalTime();
 		LocalTime klockslag = dt.plusMinutes(result);
 				
-		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n" + "Klockslag: " + klockslag);
-	}*/
+		resulttxt.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
+		+ "Klockslag: " + klockslag);
+	}
 	
 	private double calculateDistance(double distance, double speed) {
 		return distance/speed*60; // Tid=distans/hastighet*60 ex. 10M/12knop*60 = 50min
 	}
-	
-	
 }
