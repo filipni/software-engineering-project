@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import eu.portcdm.mb.client.MessageQueueServiceApi;
 import eu.portcdm.client.ApiException;
@@ -138,12 +140,15 @@ public class Controller implements Initializable
 		double distance = Double.parseDouble(distTextField.getText());
 		double speed = Double.parseDouble(speedTextField.getText());  
 		int result = (int) calculateDistance(distance, speed);
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
 		
 		LocalTime dt = new LocalTime();
 		LocalTime klockslag = dt.plusMinutes(result);
-				
+		String tid = formatter.print(klockslag);
+
+
 		resulttxt.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
-		+ "Klockslag: " + klockslag);
+		+ "Klockslag: " + tid);
 	}
 	
 	private double calculateDistance(double distance, double speed) {
