@@ -78,12 +78,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="distTextField" opacity="0.0" text="Distans">
+            <TextField fx:id="distTextField" opacity="0.0">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </TextField>
-            <TextField fx:id="speedTextField" opacity="0.0" text="Hastighet" GridPane.rowIndex="1">
+            <TextField fx:id="speedTextField" opacity="0.0" GridPane.rowIndex="1">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
