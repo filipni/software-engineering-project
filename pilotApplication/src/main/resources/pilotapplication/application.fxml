@@ -42,7 +42,14 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="incButton" mnemonicParsing="false" onAction="#incButtonHandler" text="Inc" />
+                  <Button fx:id="incButton" mnemonicParsing="false" onAction="#incButtonHandler" prefHeight="83.0" prefWidth="47.0">
+                     <graphic>
+                        <ImageView fx:id="buttonImg1" fitHeight="75.0" fitWidth="74.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/abc.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="294.0" prefWidth="196.0" GridPane.rowIndex="1">
@@ -50,17 +57,17 @@
                   <Button fx:id="depButton" mnemonicParsing="false" onAction="#depButtonHandler" text="Dep" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <HBox fx:id="hBoxRec1" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" visible="false" GridPane.columnIndex="1">
                <children>
-                  <Rectangle fx:id="rectangle1" arcHeight="5.0" arcWidth="5.0" fill="#3c8dc2" height="180.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="350.0" />
+                  <Rectangle fx:id="rectangle1" arcHeight="5.0" arcWidth="5.0" fill="#3c8dc2" height="180.0" opacity="0.1" stroke="BLACK" strokeType="INSIDE" width="350.0" />
                </children>
                <padding>
                   <Insets left="40.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <HBox fx:id="hBoxRec2" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Rectangle fx:id="rectangle2" arcHeight="5.0" arcWidth="5.0" fill="#3c8dc2" height="180.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="350.0" />
+                  <Rectangle fx:id="rectangle2" arcHeight="5.0" arcWidth="5.0" fill="#3c8dc2" height="180.0" opacity="0.1" stroke="BLACK" strokeType="INSIDE" width="350.0" />
                </children>
                <padding>
                   <Insets left="40.0" />
@@ -68,7 +75,7 @@
             </HBox>
          </children>
       </GridPane>
-      <GridPane layoutX="133.0" layoutY="14.0" prefHeight="141.0" prefWidth="331.0">
+      <GridPane fx:id="gridPane1" layoutX="133.0" layoutY="14.0" prefHeight="141.0" prefWidth="331.0" visible="false">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -78,20 +85,20 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="distTextField" opacity="0.0">
+            <TextField fx:id="distTextField">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </TextField>
-            <TextField fx:id="speedTextField" opacity="0.0" GridPane.rowIndex="1">
+            <TextField fx:id="speedTextField" GridPane.rowIndex="1">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </TextField>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="30.0" GridPane.rowIndex="2">
                <children>
-                  <Button fx:id="calcButton" mnemonicParsing="false" onAction="#calcButtonHandler" opacity="0.0" text="Lägg till" />
-                  <Text fx:id="resulttxt" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Button fx:id="calcButton" mnemonicParsing="false" onAction="#calcButtonHandler" text="Lägg till" />
+                  <Text fx:id="resulttxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                </children>
                <padding>
                   <Insets left="10.0" />

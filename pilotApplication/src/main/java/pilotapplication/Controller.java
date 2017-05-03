@@ -23,9 +23,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -114,25 +119,33 @@ public class Controller implements Initializable
 	@FXML
 	private Text resulttxt; 
 	
+	@FXML 
+	private GridPane gridPane1; 
+	
+	@FXML 
+	private HBox hBoxRec1, hBoxRec2; 
+	
 	public void incButtonHandler(ActionEvent event) {
 		
-		distTextField.setOpacity(1);
-		speedTextField.setOpacity(1);
-		calcButton.setOpacity(1);
-		resulttxt.setOpacity(1);
-		rectangle1.setOpacity(0.1);
-		rectangle2.setOpacity(0);
+		distTextField.setPromptText("Distans i sjömil");
+		speedTextField.setPromptText("Hastighet i knop");
 		
+		gridPane1.setVisible(true);
+		hBoxRec1.setVisible(true);
+		
+		hBoxRec2.setVisible(false);
 	}
 	
 	public void depButtonHandler(ActionEvent event) {
 		
-		distTextField.setOpacity(0);
-		speedTextField.setOpacity(0);
-		calcButton.setOpacity(0);
-		resulttxt.setOpacity(0);
-		rectangle1.setOpacity(0);
-		rectangle2.setOpacity(0.1);
+		hBoxRec2.setVisible(true);
+		
+		gridPane1.setVisible(false);
+		hBoxRec1.setVisible(false);
+		
+		progressBar(12); 
+		
+		
 	}	
 	
 	public void calcButtonHandler(ActionEvent event) {
@@ -153,5 +166,14 @@ public class Controller implements Initializable
 	
 	private double calculateDistance(double distance, double speed) {
 		return distance/speed*60; // Tid=distans/hastighet*60 ex. 10M/12knop*60 = 50min
+	}
+	
+	public void progressBar(int progressLength){
+		
+		final ProgressBar pb = new ProgressBar(0);
+        
+		pb.setProgress(0.5);
+		
+		hBoxRec2.getChildren().addAll(pb);
 	}
 }
