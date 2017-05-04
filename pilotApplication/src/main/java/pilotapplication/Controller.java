@@ -8,16 +8,28 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import javax.json.Json;
+import javax.persistence.GeneratedValue;
+
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.google.gson.JsonObject;
+
 import eu.portcdm.mb.client.MessageQueueServiceApi;
+import eu.portcdm.messaging.LocationReferenceObject;
+import eu.portcdm.messaging.LogicalLocation;
+import eu.portcdm.messaging.PortCallMessage;
+import eu.portcdm.messaging.TimeType;
 import eu.portcdm.client.ApiException;
 import eu.portcdm.client.service.PortcallsApi;
+import eu.portcdm.dto.LocationTimeSequence;
 import eu.portcdm.dto.PortCallSummary;
 
 import se.viktoria.stm.portcdm.connector.common.SubmissionService;
+import se.viktoria.stm.portcdm.connector.common.util.PortCallMessageBuilder;
+import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 import se.viktoria.util.Configuration;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +46,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
@@ -57,18 +70,12 @@ public class Controller implements Initializable
 	
 	ArrayList <String> IDs = new ArrayList<>(Arrays.asList("IMO:9398917", "IMO:9371878", "IMO:9299707", "IMO:9425356", "IMO:9186728", "IMO:9057173", "IMO:9247168"));
 	
-	class ButtonHandler implements EventHandler<ActionEvent> {
-		@Override
-		public void handle(ActionEvent  arg0) {
-			System.out.println("afdsadsf"); 
-		}
-	}
-	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {		
 		initSubmissionService(CONFIG_FILE_NAME, CONFIG_FILE_DIR);	
 		initMessageBrokerAPI(BASE_URL_VM + "mb", 20000);
 		initPortCallsAPI(BASE_URL_VM + "dmp", 20000);
+
 		
 		
 		ObservableList<Button> buttons = FXCollections.observableArrayList();
@@ -76,12 +83,35 @@ public class Controller implements Initializable
 			Button b = new Button();
 			b.setText(IDs.get(i));
 			buttons.add(b);
-			b.setOnAction(new ButtonHandler());
-		};
+			
+			b.setOnAction((event) -> { popWindow(b); });	
+			}
+		IDListView.setItems(buttons);	
+	}
 		
-		IDListView.setItems(buttons);
+	private void popWindow(Button b) {
+		String id = b.getText(); 
+		AnchorPane1.setVisible(true);
+		idText.setText(id);
 		
+		
+		if (id.equals("IMO:9371878")) { //TODO: ändra kommandot för att byta bild
+			imgViewAvg.setVisible(false);
+			imgViewInk.setVisible(true);
+			inkOrAvgText.setText("Inkommande");
+			
+		}	
+		else {
+			imgViewAvg.setVisible(true); 
+			imgViewInk.setVisible(false);
+			inkOrAvgText.setText("Avgående");
 		}
+			
+		
+	}
+	
+	private List<PortCallSummary> getPortCalls() {
+
 		// Try to read some portcalls from PortCDM
 		/*
 		List<PortCallSummary> portcalls = null;
@@ -96,7 +126,70 @@ public class Controller implements Initializable
 			System.out.println(pc.getId());
 		}*/
 	
+				List<PortCallSummary> portcalls = null;
+				List<String> ids = new ArrayList<>();
+				try {
+					portcalls = portCallsAPI.getAllPortCalls(10);
+				} catch (ApiException e) {
+					System.out.println(e.getCode() + " " + e.getMessage());
+					System.out.println(e.getResponseBody());
+				}
+				return portcalls;
+	}
 	
+	/*
+	 * 
+	 */
+	private String getVesselId(PortCallSummary pcs) {
+		String id = "IMO:" + pcs.getVessel().getImo();
+		return id;
+	}
+	
+	/*
+	 * 
+	 */
+	private List<String> getVesselIds(List<PortCallSummary> portcalls) {
+		List<String> ids = new ArrayList<>();
+		for(PortCallSummary pc : portcalls) {
+		ids.add(getVesselId(pc));
+		}
+		return ids;
+	}
+		
+	
+
+	/*
+	 * Skapar ett exempel-pcm som används i test-syfte.
+	 */
+    private PortCallMessage getExampleMessage() {
+        StateWrapper stateWrapper = new StateWrapper(
+                LocationReferenceObject.VESSEL, //referenceObject
+                LocationTimeSequence.ARRIVAL_TO, //ARRIVAL_TO or DEPARTURE_FROM
+                LogicalLocation.BERTH, //Type of required location
+                53.50, //Latitude of required location
+                53.50, //Longitude of required location
+                "Skarvik Harbour 518", //Name of required location
+                LogicalLocation.ANCHORING_AREA, //Type of optional location
+                52.50, //Latitude of optional location
+                52.50, //Longitude of optional location
+                "Dana Fjord D1" );//Name of optional location
+        //Change dates from 2017-03-23 06:40:00 to 2017-03-23T06:40:00Z 
+        PortCallMessage portCallMessage = PortCallMessageBuilder.build(
+                "urn:mrn:stm:portcdm:local_port_call:SEGOT:DHC:52723", //localPortCallId
+                "urn:mrn:stm:portcdm:local_job:FENIX_SMA:990198125", //localJobId
+                stateWrapper, //StateWrapper created above
+                "2017-03-23T06:40:00Z", //Message's time
+                TimeType.ESTIMATED, //Message's timeType
+                "urn:mrn:stm:vessel:IMO:9259501", //vesselId
+                "2017-03-23T06:38:56Z", //reportedAt (optional)
+                "Viktoria", //reportedBy (optional)
+                "urn:mrn:stm:portcdm:message:5eadbb1c-6be7-4cf2-bd6d-f0af5a0c35dc", //groupWith (optional), messageId of the message to group with.
+                "example comment" //comment (optional)
+        );
+
+        return portCallMessage;
+    }
+    
 	private void initSubmissionService(String configFileName, String configFileDir) {
 		Configuration config = new Configuration(
 				configFileName, 
@@ -134,19 +227,7 @@ public class Controller implements Initializable
 	private ListView<Button> IDListView; 
 	
 	@FXML
-	private ImageView img; 
-	
-	/*@FXML
-	private Button Button1, Button2, Button3;*/
-	
-	@FXML
-	private TextField distTextField, speedTextField;
-	
-	@FXML
-	private Rectangle rectangle1, rectangle2;
-	
-	@FXML
-	private Text resulttxt; 
+	private Text idText, inkOrAvgText;
 	
 	@FXML 
 	private GridPane gridPane1; 
@@ -154,31 +235,17 @@ public class Controller implements Initializable
 	@FXML 
 	private HBox hBoxRec1, hBoxRec2; 
 	
+	@FXML
+	private AnchorPane AnchorPane1; 
 	
-	public void incButtonHandler(ActionEvent event) {
-		
-		distTextField.setPromptText("Distans i sjömil");
-		speedTextField.setPromptText("Hastighet i knop");
-		
-		gridPane1.setVisible(true);
-		hBoxRec1.setVisible(true);
-		
-		hBoxRec2.setVisible(false);
-	}
+	@FXML
+	private ImageView imgViewInk, imgViewAvg; 
 	
-	public void depButtonHandler(ActionEvent event) {
-		
-		hBoxRec2.setVisible(true);
-		
-		gridPane1.setVisible(false);
-		hBoxRec1.setVisible(false);
-		
-		progressBar(12); 
-		
-		
-	}	
 	
-	public void calcButtonHandler(ActionEvent event) {
+	
+		
+	
+	/*public void calcButtonHandler(ActionEvent event) {
 		
 		double distance = Double.parseDouble(distTextField.getText());
 		double speed = Double.parseDouble(speedTextField.getText());  
@@ -192,7 +259,7 @@ public class Controller implements Initializable
 
 		resulttxt.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
 		+ "Klockslag: " + tid);
-	}
+	}*/
 	
 	private double calculateDistance(double distance, double speed) {
 		return distance/speed*60; // Tid=distans/hastighet*60 ex. 10M/12knop*60 = 50min
