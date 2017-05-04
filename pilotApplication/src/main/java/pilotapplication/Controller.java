@@ -84,6 +84,7 @@ public class Controller implements Initializable
 			b.setText(IDs.get(i));
 			buttons.add(b);
 			
+			
 			b.setOnAction((event) -> { popWindow(b); });	
 			}
 		IDListView.setItems(buttons);	
