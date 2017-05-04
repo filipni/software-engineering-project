@@ -43,6 +43,11 @@ public class PortCDMApi {
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
 	
+	/**
+	 * Constructor for the PortCDMApi object
+	 * 
+	 * @param connectToExternalServer connect to external dev server if <code>true</code>, else connect to local vm
+	 */
 	public PortCDMApi(boolean connectToExternalServer) {
 		if (connectToExternalServer) {
 			initSubmissionService(CONFIG_FILE_NAME, CONFIG_FILE_DIR);
@@ -56,6 +61,12 @@ public class PortCDMApi {
 		}	
 	}
 	
+	/**
+	 * Init connector (submissionService) to portCDM.
+	 * 
+	 * @param configFileName	filename for application configuration	
+	 * @param configFileDir		leaf directory for application configuration
+	 */
 	private void initSubmissionService(String configFileName, String configFileDir) {
 		Configuration config = new Configuration(
 				configFileName, 
@@ -72,6 +83,12 @@ public class PortCDMApi {
 		submissionService.addConnectors(config);
 	}
 	
+	/**
+	 * Init API to portCDM message broker.
+	 *  
+	 * @param baseUrl
+	 * @param timeout 
+	 */
 	private void initMessageBrokerAPI(String baseUrl, int timeout) {
 		eu.portcdm.mb.client.ApiClient connectorClient = new eu.portcdm.mb.client.ApiClient();
 		connectorClient.setBasePath(baseUrl);
@@ -79,6 +96,15 @@ public class PortCDMApi {
 		messageBrokerAPI = new MessageQueueServiceApi(connectorClient);
 	}
 	
+	/**
+	 * Init API to portCDM port call manager.
+	 * 
+	 * @param baseUrl
+	 * @param timeout	
+	 * @param username	
+	 * @param password
+	 * @param apikey
+	 */
 	private void initPortCallsAPI(String baseUrl, int timeout, String username, String password, String apikey) {
 		eu.portcdm.client.ApiClient connectorClient = new eu.portcdm.client.ApiClient();
 		connectorClient.setBasePath(baseUrl);
@@ -89,6 +115,11 @@ public class PortCDMApi {
 		portCallsAPI = new PortcallsApi(connectorClient);				
 	}
 	
+	/**
+	 * Submits a list of portcall messages to PortCDM. 
+	 * 
+	 * @param portCallMessages list of portcall messages to be sent
+	 */
 	public void sendPortCallMessages(List<PortCallMessage> portCallMessages) {
 		submissionService.submitUpdates(portCallMessages);
 	}
