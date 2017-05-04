@@ -93,21 +93,20 @@ public class Controller implements Initializable
 		String id = b.getText(); 
 		AnchorPane1.setVisible(true);
 		idText.setText(id);
+		bookTimeText.setText("17:25 23-april"); //TODO: ändra till interaktiv
+		etaTimeText.setText("03:12 24-april");
 		
 		
 		if (id.equals("IMO:9371878")) { //TODO: ändra kommandot för att byta bild
 			imgViewAvg.setVisible(false);
 			imgViewInk.setVisible(true);
 			inkOrAvgText.setText("Inkommande");
-			
 		}	
 		else {
 			imgViewAvg.setVisible(true); 
 			imgViewInk.setVisible(false);
 			inkOrAvgText.setText("Avgående");
 		}
-			
-		
 	}
 	
 	private List<PortCallSummary> getPortCalls() {
@@ -227,7 +226,7 @@ public class Controller implements Initializable
 	private ListView<Button> IDListView; 
 	
 	@FXML
-	private Text idText, inkOrAvgText;
+	private Text idText, inkOrAvgText, bookTimeText, etaTimeText;
 	
 	@FXML 
 	private GridPane gridPane1; 

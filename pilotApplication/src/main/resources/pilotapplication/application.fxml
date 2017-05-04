@@ -65,12 +65,22 @@
                </image>
             </ImageView>
             <Text fx:id="inkOrAvgText" fill="#000000cc" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429" />
-            <Text fill="#000000cc" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" AnchorPane.leftAnchor="60.0">
+            <Text fill="#000000cc" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" AnchorPane.leftAnchor="70.0">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fill="#000000cc" layoutX="10.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA mötesplats" AnchorPane.rightAnchor="60.0">
+            <Text fill="#000000cc" layoutX="10.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA mötesplats" AnchorPane.rightAnchor="70.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text fx:id="bookTimeText" fill="#000000cc" layoutX="45.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.leftAnchor="55.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text fx:id="etaTimeText" fill="#000000cc" layoutX="288.103515625" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.rightAnchor="75.0">
                <font>
                   <Font size="20.0" />
                </font>
