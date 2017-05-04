@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import eu.portcdm.client.ApiException;
 import eu.portcdm.client.service.PortcallsApi;
 import eu.portcdm.dto.LocationTimeSequence;
+import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.mb.client.MessageQueueServiceApi;
 import eu.portcdm.messaging.LocationReferenceObject;
 import eu.portcdm.messaging.LogicalLocation;
@@ -112,6 +114,24 @@ public class PortCDMApi {
         connectorClient.addDefaultHeader("X-PortCDM-Password", password);
         connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
 		portCallsAPI = new PortcallsApi(connectorClient);				
+	}
+	
+	/**
+	 * Get summary of portcalls from portCDM.
+	 * 
+	 * @param max maximum number of portcalls to fetch
+	 * @return list of portcall summaries
+	 */
+	public List<PortCallSummary> getPortCalls(int max) {
+		List<PortCallSummary> portcalls = null;
+		try {
+			portcalls = portCallsAPI.getAllPortCalls(max);
+		} catch (ApiException e) {
+			System.out.println("Couldn't fetch portcalls.");
+			System.out.println(e.getCode() + " " + e.getMessage());
+			System.out.println(e.getResponseBody());
+		}
+		return portcalls;
 	}
 	
 	/**

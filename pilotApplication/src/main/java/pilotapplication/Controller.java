@@ -3,7 +3,6 @@ package pilotapplication;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -19,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import eu.portcdm.client.ApiException;
-import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.messaging.PortCallMessage;
 
 public class Controller implements Initializable {	
@@ -61,6 +59,30 @@ public class Controller implements Initializable {
 	}
 	
 	/**
+	 * DOCUMENTATION HERE PLEASE!
+	 * 
+	 * @param b description of parameter
+	 */
+	private void popWindow(Button b) {
+		String id = b.getText(); 
+		AnchorPane1.setVisible(true);
+		idText.setText(id);
+		bookTimeText.setText("17:25 23-april"); //TODO: make interactive
+		etaTimeText.setText("03:12 24-april");
+		
+		if (id.equals("IMO:9371878")) { //TODO: change the image in some other way
+			imgViewAvg.setVisible(false);
+			imgViewInk.setVisible(true);
+			inkOrAvgText.setText("Inkommande");
+		}	
+		else {
+			imgViewAvg.setVisible(true); 
+			imgViewInk.setVisible(false);
+			inkOrAvgText.setText("Avgående");
+		}
+	}
+	
+	/**
 	 * Simple method for testing the api to portcdm
 	 */
 	private void getAndSend() {
@@ -76,49 +98,6 @@ public class Controller implements Initializable {
 		pcm.setPortCallId(portcallId);
 		
 		portcdmApi.sendPortCallMessages(Arrays.asList(pcm));
-	}
-		
-	private void popWindow(Button b) {
-		String id = b.getText(); 
-		AnchorPane1.setVisible(true);
-		idText.setText(id);
-		bookTimeText.setText("17:25 23-april"); //TODO: make interactive
-		etaTimeText.setText("03:12 24-april");
-		
-		if (id.equals("IMO:9371878")) { //TODO: use another way to change the image
-			imgViewAvg.setVisible(false);
-			imgViewInk.setVisible(true);
-			inkOrAvgText.setText("Inkommande");
-		}	
-		else {
-			imgViewAvg.setVisible(true); 
-			imgViewInk.setVisible(false);
-			inkOrAvgText.setText("Avgående");
-		}
-	}
-	
-	private List<PortCallSummary> getPortCalls() {
-		List<PortCallSummary> portcalls = null;
-		try {
-			portcalls = portcdmApi.portCallsAPI.getAllPortCalls(10);
-		} catch (ApiException e) {
-			System.out.println(e.getCode() + " " + e.getMessage());
-			System.out.println(e.getResponseBody());
-		}
-		return portcalls;
-	}
-	
-	private String getVesselId(PortCallSummary pcs) {
-		String id = "IMO:" + pcs.getVessel().getImo();
-		return id;
-	}
-	
-	private List<String> getVesselIds(List<PortCallSummary> portcalls) {
-		List<String> ids = new ArrayList<>();
-		for(PortCallSummary pc : portcalls) {
-		ids.add(getVesselId(pc));
-		}
-		return ids;
 	}
 		
 }
