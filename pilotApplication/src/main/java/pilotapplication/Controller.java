@@ -17,7 +17,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-import eu.portcdm.client.ApiException;
 import eu.portcdm.messaging.PortCallMessage;
 
 public class Controller implements Initializable {	
