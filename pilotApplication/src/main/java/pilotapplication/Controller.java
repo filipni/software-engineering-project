@@ -85,17 +85,11 @@ public class Controller implements Initializable {
 	/**
 	 * Simple method for testing the api to portcdm
 	 */
-	private void getAndSend() {
-		String portcallId = null;
-		
-		try {
-			portcallId = portcdmApi.portCallsAPI.getAllPortCalls(1).get(0).getId();
-		} catch (ApiException e) {
-			e.printStackTrace();
-		}
+	private void getAndSend() {		
+		String portcallId = portcdmApi.getPortCalls(1).get(0).getId();
 		
 		PortCallMessage pcm = portcdmApi.getExampleMessage();
-		pcm.setPortCallId(portcallId);
+		pcm.setPortCallId(portcallId);	
 		
 		portcdmApi.sendPortCallMessages(Arrays.asList(pcm));
 	}
