@@ -1,6 +1,8 @@
 package pilotapplication;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -17,12 +19,15 @@ import eu.portcdm.dto.PortCallSummary;
 
 import se.viktoria.stm.portcdm.connector.common.SubmissionService;
 import se.viktoria.util.Configuration;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Slider;
@@ -50,12 +55,33 @@ public class Controller implements Initializable
 	private MessageQueueServiceApi messageBrokerAPI;
 	private PortcallsApi portCallsAPI;
 	
+	ArrayList <String> IDs = new ArrayList<>(Arrays.asList("IMO:9398917", "IMO:9371878", "IMO:9299707", "IMO:9425356", "IMO:9186728", "IMO:9057173", "IMO:9247168"));
+	
+	class ButtonHandler implements EventHandler<ActionEvent> {
+		@Override
+		public void handle(ActionEvent  arg0) {
+			System.out.println("afdsadsf"); 
+		}
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {		
 		initSubmissionService(CONFIG_FILE_NAME, CONFIG_FILE_DIR);	
 		initMessageBrokerAPI(BASE_URL_VM + "mb", 20000);
 		initPortCallsAPI(BASE_URL_VM + "dmp", 20000);
 		
+		
+		ObservableList<Button> buttons = FXCollections.observableArrayList();
+		for (int i = 0; i < IDs.size(); i++) {
+			Button b = new Button();
+			b.setText(IDs.get(i));
+			buttons.add(b);
+			b.setOnAction(new ButtonHandler());
+		};
+		
+		IDListView.setItems(buttons);
+		
+		}
 		// Try to read some portcalls from PortCDM
 		/*
 		List<PortCallSummary> portcalls = null;
@@ -69,7 +95,7 @@ public class Controller implements Initializable
 		for(PortCallSummary pc : portcalls) {
 			System.out.println(pc.getId());
 		}*/
-	}
+	
 	
 	private void initSubmissionService(String configFileName, String configFileDir) {
 		Configuration config = new Configuration(
@@ -105,10 +131,13 @@ public class Controller implements Initializable
 	}
 	
 	@FXML
-	private ImageView img; 
+	private ListView<Button> IDListView; 
 	
 	@FXML
-	private Button incButton, depButton, calcButton;
+	private ImageView img; 
+	
+	/*@FXML
+	private Button Button1, Button2, Button3;*/
 	
 	@FXML
 	private TextField distTextField, speedTextField;
@@ -124,6 +153,7 @@ public class Controller implements Initializable
 	
 	@FXML 
 	private HBox hBoxRec1, hBoxRec2; 
+	
 	
 	public void incButtonHandler(ActionEvent event) {
 		
@@ -166,14 +196,5 @@ public class Controller implements Initializable
 	
 	private double calculateDistance(double distance, double speed) {
 		return distance/speed*60; // Tid=distans/hastighet*60 ex. 10M/12knop*60 = 50min
-	}
-	
-	public void progressBar(int progressLength){
-		
-		final ProgressBar pb = new ProgressBar(0);
-        
-		pb.setProgress(0.5);
-		
-		hBoxRec2.getChildren().addAll(pb);
 	}
 }
