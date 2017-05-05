@@ -99,14 +99,13 @@ public class Controller implements Initializable {
 		etaTimeText.setText(summary.getLastUpdate().substring(10));
 		
 		// Download the image of the vessel and adjust its size
-		String photoUrl = summary.getVessel().getPhotoURL();
-		Image vesselPhoto = downloadImage(photoUrl);
+		Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
 		vesselImg.setImage(vesselPhoto);
 		vesselImg.setFitWidth(300);
 		vesselImg.setFitHeight(200);
 		
-		// Set all the portcalls with an IMO starting with "7" to incoming
-		if (id.startsWith("7")) {
+		// Set all portcalls that do not have an IMO starting with "9" to incoming
+		if (!id.startsWith("9")) {
 			statusImg.setImage(new Image("pilotapplication/img/Inkommande.png"));
 			vesselStatusText.setText("Inkommande");
 		}	
@@ -114,25 +113,6 @@ public class Controller implements Initializable {
 			statusImg.setImage(new Image("pilotapplication/img/Avgående.png"));
 			vesselStatusText.setText("Avgående");
 		}
-	}
-	
-	/**
-	 * Download image from URL.
-	 * 
-	 * @param url string representation of the URL pointing to the image
-	 * @return the downloaded image if no exceptions were caught
-	 */
-	private Image downloadImage(String url) {
-		Image img = null;
-		try {
-			URLConnection conn = new URL(url).openConnection();
-			conn.setRequestProperty("User-Agent", "Wget/1.13.4 (linux-gnu)");
-			InputStream in = conn.getInputStream();
-			img = new Image(in);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return img;
 	}	
 	
 	/**
