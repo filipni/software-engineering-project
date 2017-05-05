@@ -10,14 +10,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="680.0" prefWidth="1034.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pilotapplication.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="680.0" prefWidth="1034.0" styleClass="root" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pilotapplication.Controller">
    <children>
       <BorderPane layoutX="307.0" layoutY="223.0" prefHeight="680.0" prefWidth="1034.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#005aab" height="30.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" width="1034.0" BorderPane.alignment="CENTER" />
+            <Rectangle fill="#005aab" height="30.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="frameBar" width="1034.0" BorderPane.alignment="CENTER" />
          </top>
          <bottom>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#005aab" height="30.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" width="1034.0" BorderPane.alignment="CENTER" />
+            <Rectangle fill="#005aab" height="30.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="frameBar" width="1034.0" BorderPane.alignment="CENTER" />
          </bottom>
          <center>
             <ImageView fitHeight="315.0" fitWidth="715.0" opacity="0.4" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
@@ -29,7 +29,7 @@
       </BorderPane>
       <AnchorPane prefHeight="680.0" prefWidth="260.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a9bccdb2" height="598.0" layoutX="30.0" layoutY="42.0" stroke="WHITE" strokeType="INSIDE" width="200.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a9bccdb2" height="598.0" layoutX="30.0" layoutY="42.0" stroke="WHITE" strokeType="INSIDE" style="visibility: 0;" styleClass="transRect" width="200.0">
                <effect>
                   <DropShadow color="WHITE" radius="37.3225" width="130.29" />
                </effect>
@@ -39,12 +39,12 @@
                   <Font size="23.0" />
                </font>
             </Text>
-            <ListView fx:id="IDListView" layoutX="40.0" layoutY="84.0" prefHeight="510.0" prefWidth="180.0" />
+            <ListView fx:id="idListView" layoutX="40.0" layoutY="84.0" onMouseClicked="#handleMouseClick" prefHeight="510.0" prefWidth="180.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="AnchorPane1" layoutX="250.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="518.0" prefWidth="376.0" visible="false">
+      <AnchorPane fx:id="vesselInfoPane" layoutX="250.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="518.0" prefWidth="376.0" visible="false">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a9bccdb2" height="518.0" layoutY="42.0" stroke="WHITE" strokeType="INSIDE" width="494.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a9bccdb2" height="518.0" layoutY="42.0" stroke="WHITE" strokeType="INSIDE" styleClass="transRect" width="494.0">
                <effect>
                   <DropShadow color="WHITE" radius="37.3225" width="130.29" />
                </effect>
@@ -54,17 +54,9 @@
                   <Font size="23.0" />
                </font>
             </Text>
-            <ImageView fx:id="imgViewInk" fitHeight="82.0" fitWidth="82.0" layoutX="208.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true" visible="false">
-               <image>
-                  <Image url="@img/Inkommande.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="imgViewAvg" fitHeight="82.0" fitWidth="82.0" layoutX="208.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true" visible="false">
-               <image>
-                  <Image url="@img/Avgående.png" />
-               </image>
-            </ImageView>
-            <Text fx:id="inkOrAvgText" fill="#000000cc" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429" />
+            <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="208.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true" visible="true" />
+            <ImageView fx:id="vesselImg" fitHeight="200.0" fitWidth="300.0" layoutX="100.0" layoutY="325.0" pickOnBounds="true" preserveRatio="true" styleClass="vesselImage" />
+            <Text fx:id="vesselStatusText" fill="#000000cc" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429" />
             <Text fill="#000000cc" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" AnchorPane.leftAnchor="70.0">
                <font>
                   <Font size="20.0" />
