@@ -25,37 +25,32 @@
             <ListView fx:id="idListView" layoutX="40.0" layoutY="84.0" onMouseClicked="#handleMouseClick" prefHeight="510.0" prefWidth="180.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="vesselInfoPane" layoutX="250.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="518.0" prefWidth="376.0" visible="false">
+      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="252.0" layoutY="42.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="483.0" prefWidth="493.0" stylesheets="@application.css" visible="false">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a9bccdb2" height="518.0" layoutY="42.0" stroke="WHITE" strokeType="INSIDE" styleClass="transRect" width="494.0">
-               <effect>
-                  <DropShadow color="WHITE" radius="37.3225" width="130.29" />
-               </effect>
-            </Rectangle>
-            <Text fx:id="idText" fill="#000000cc" layoutX="14.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="225.7294921875">
+            <Text fx:id="idText" fill="#000000cc" layoutX="13.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.7294921875">
                <font>
                   <Font size="23.0" />
                </font>
             </Text>
-            <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="208.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true" visible="true" />
-            <ImageView fx:id="vesselImg" fitHeight="200.0" fitWidth="300.0" layoutX="100.0" layoutY="325.0" pickOnBounds="true" preserveRatio="true" styleClass="vesselImage" />
-            <Text fx:id="vesselStatusText" fill="#000000cc" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429" />
-            <Text fill="#000000cc" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" AnchorPane.leftAnchor="70.0">
+            <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" visible="true" />
+            <ImageView fx:id="vesselImg" fitHeight="199.0" fitWidth="298.0" layoutX="102.0" layoutY="251.0" pickOnBounds="true" preserveRatio="true" styleClass="vesselImage" />
+            <Text fx:id="vesselStatusText" fill="#000000cc" layoutX="4.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429" />
+            <Text fill="#000000cc" layoutX="82.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" textAlignment="CENTER" AnchorPane.leftAnchor="82.0">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fill="#000000cc" layoutX="10.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA mötesplats" AnchorPane.rightAnchor="70.0">
+            <Text fill="#000000cc" layoutX="277.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA mötesplats" AnchorPane.rightAnchor="64.052734375">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fx:id="bookTimeText" fill="#000000cc" layoutX="45.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.leftAnchor="55.0">
+            <Text fx:id="bookTimeText" fill="#000000cc" layoutX="67.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.leftAnchor="67.0">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fx:id="etaTimeText" fill="#000000cc" layoutX="288.103515625" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.rightAnchor="75.0">
+            <Text fx:id="etaTimeText" fill="#000000cc" layoutX="287.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.rightAnchor="69.052734375">
                <font>
                   <Font size="20.0" />
                </font>

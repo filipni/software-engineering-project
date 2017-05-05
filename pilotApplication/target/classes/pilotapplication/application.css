@@ -1,9 +1,13 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 #rootPane {
 	-fx-border-color: black;
 	-fx-background-image: url("img/Sjöfartsverket_logo.png");
 	-fx-background-repeat: no-repeat;
 	-fx-background-position: center;
+}
+
+#infoPopUp {
+	-fx-background-color: rgb(169,188,204, 0.7); /* Also sets opacity */
+	-fx-border-color: black;
 }
 
 .transRect {
