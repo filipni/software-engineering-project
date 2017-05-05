@@ -5,11 +5,11 @@
 	-fx-background-position: center;
 }
 
-#infoPopUp {
+.transRect {
 	-fx-background-color: rgb(169,188,204, 0.7); /* Also sets opacity */
 	-fx-border-color: black;
-}
-
-.transRect {
-	-fx-stroke: black;
+	
+	/* Round corners */
+	-fx-border-radius: 5;	
+	-fx-background-radius: 5;
 }
