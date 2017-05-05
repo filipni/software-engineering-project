@@ -1,6 +1,9 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-.root {
-	-fx-border-color: black;	
+#rootPane {
+	-fx-border-color: black;
+	-fx-background-image: url("img/Sjöfartsverket_logo.png");
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
 }
 
 .transRect {
