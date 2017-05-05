@@ -64,6 +64,7 @@ public class Controller implements Initializable {
 			e.printStackTrace();
 		}
 		*/
+		
 	}
 	
 	/**
@@ -132,32 +133,33 @@ public class Controller implements Initializable {
 	 * @throws InterruptedException 
 	 */
 	private void getAndSend() throws ApiException, InterruptedException {
-		String portCallId = portcdmApi.getPortCalls(1).get(0).getId(); // Perhaps we should try and create our own port call
+		String portCallId = portcdmApi.getPortCalls(1).get(0).getId(); // Perhaps we should try and create our own port call and keep track of it via PortCDMs web GUI
 		System.out.println("Port call received: " + portCallId);
 		
 		// Create a queue in portCDM with specified filters
 		List<Filter> filters = new ArrayList<>();
 		Filter f = new Filter();
-		f.setType(FilterType.PORT_CALL);
+		f.setType(FilterType.PORT_CALL); // Change filter parameters, and maybe add more filters
 		f.setElement(portCallId);
+		filters.add(f);
 		String queueId = portcdmApi.messageBrokerAPI.mqsPost(filters);
 		System.out.println("Created queue with id: " + queueId);
 		
 		// Send a message that hopefully will end up in our queue
-		PortCallMessage pcm = portcdmApi.getExampleMessage();
-		pcm.setPortCallId(portCallId);		
-		portcdmApi.sendPortCallMessages(Arrays.asList(pcm));
+		PortCallMessage pcm = portcdmApi.getExampleMessage(); // Does something need to be changed in the example message?
+		pcm.setPortCallId(portCallId); 
+		portcdmApi.sendPortCallMessages(Arrays.asList(pcm)); // What if we try to send messages with StadeUpdateApi instead of SubmissionService?
 		
 		// Wait for a bit to make sure the queue gets updated (should perhaps be increased?)
 		TimeUnit.SECONDS.sleep(15);
 		
 		// See if we can receive anything
-		List<PortCallMessage> receivedMessages = portcdmApi.messageBrokerAPI.mqsQueueGet(queueId);
+		List<PortCallMessage> receivedMessages = portcdmApi.messageBrokerAPI.mqsQueueGet(queueId); // Maybe messages you sent yourself won't be returned
 		System.out.println("Messages received: " + receivedMessages.size());
 		
 		// Print received messages
 		for (PortCallMessage msg : receivedMessages) {
-			System.out.println(msg.getReportedBy());
+			System.out.println(msg.getMessageId());
 		}
 	}
 		
