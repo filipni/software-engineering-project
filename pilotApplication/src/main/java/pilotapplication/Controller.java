@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import eu.portcdm.dto.PortCallSummary;
+import eu.portcdm.mb.client.ApiException;
+import eu.portcdm.mb.dto.Filter;
+import eu.portcdm.mb.dto.FilterType;
 import eu.portcdm.messaging.PortCallMessage;
 
 public class Controller implements Initializable {	
@@ -52,6 +56,14 @@ public class Controller implements Initializable {
 		portcdmApi = new PortCDMApi(useDevServer);
 		portCallTable = createPortCallTable(10);
 		populateIdList();
+		
+		/*
+		try {
+			getAndSend();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		*/
 	}
 	
 	/**
@@ -114,15 +126,39 @@ public class Controller implements Initializable {
 	}	
 	
 	/**
-	 * Simple method for testing the api to portcdm
+	 * Simple method for testing the api to portcdm.
+	 * 
+	 * @throws ApiException 
+	 * @throws InterruptedException 
 	 */
-	private void getAndSend() {		
-		String portcallId = portcdmApi.getPortCalls(1).get(0).getId();
+	private void getAndSend() throws ApiException, InterruptedException {
+		String portCallId = portcdmApi.getPortCalls(1).get(0).getId(); // Perhaps we should try and create our own port call
+		System.out.println("Port call received: " + portCallId);
 		
+		// Create a queue in portCDM with specified filters
+		List<Filter> filters = new ArrayList<>();
+		Filter f = new Filter();
+		f.setType(FilterType.PORT_CALL);
+		f.setElement(portCallId);
+		String queueId = portcdmApi.messageBrokerAPI.mqsPost(filters);
+		System.out.println("Created queue with id: " + queueId);
+		
+		// Send a message that hopefully will end up in our queue
 		PortCallMessage pcm = portcdmApi.getExampleMessage();
-		pcm.setPortCallId(portcallId);	
-		
+		pcm.setPortCallId(portCallId);		
 		portcdmApi.sendPortCallMessages(Arrays.asList(pcm));
+		
+		// Wait for a bit to make sure the queue gets updated (should perhaps be increased?)
+		TimeUnit.SECONDS.sleep(15);
+		
+		// See if we can receive anything
+		List<PortCallMessage> receivedMessages = portcdmApi.messageBrokerAPI.mqsQueueGet(queueId);
+		System.out.println("Messages received: " + receivedMessages.size());
+		
+		// Print received messages
+		for (PortCallMessage msg : receivedMessages) {
+			System.out.println(msg.getReportedBy());
+		}
 	}
 		
 }

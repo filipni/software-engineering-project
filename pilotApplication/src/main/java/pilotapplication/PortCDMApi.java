@@ -52,12 +52,12 @@ public class PortCDMApi {
 	public PortCDMApi(boolean connectToExternalServer) {
 		if (connectToExternalServer) {
 			initSubmissionService(DEV_CONFIG_FILE_NAME, null);
-			initMessageBrokerAPI(DEV_BASE_URL + MESSAGE_BROKER_PATH, DEV_TIMEOUT);
+			initMessageBrokerAPI(DEV_BASE_URL + MESSAGE_BROKER_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 			initPortCallsAPI(DEV_BASE_URL + PORT_CDM_SERVICES_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 		}
 		else {
 			initSubmissionService(VM_CONFIG_FILE_NAME, null);
-			initMessageBrokerAPI(VM_BASE_URL + MESSAGE_BROKER_PATH, VM_TIMEOUT);
+			initMessageBrokerAPI(VM_BASE_URL + MESSAGE_BROKER_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
 			initPortCallsAPI(VM_BASE_URL + PORT_CDM_SERVICES_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
 		}	
 	}
@@ -90,10 +90,13 @@ public class PortCDMApi {
 	 * @param baseUrl
 	 * @param timeout 
 	 */
-	private void initMessageBrokerAPI(String baseUrl, int timeout) {
+	private void initMessageBrokerAPI(String baseUrl, int timeout, String username, String password, String apikey) {
 		eu.portcdm.mb.client.ApiClient connectorClient = new eu.portcdm.mb.client.ApiClient();
 		connectorClient.setBasePath(baseUrl);
 		connectorClient.setConnectTimeout(timeout);
+		connectorClient.addDefaultHeader("X-PortCDM-UserId", username);
+        connectorClient.addDefaultHeader("X-PortCDM-Password", password);
+        connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
 		messageBrokerAPI = new MessageQueueServiceApi(connectorClient);
 	}
 	
