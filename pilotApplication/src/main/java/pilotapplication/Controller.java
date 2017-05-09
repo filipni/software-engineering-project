@@ -2,12 +2,11 @@ package pilotapplication;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,9 +20,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import eu.portcdm.client.service.StateupdateApi;
+
 import eu.portcdm.dto.PortCallSummary;
-import eu.portcdm.mb.client.ApiException;
 import eu.portcdm.mb.dto.Filter;
 import eu.portcdm.mb.dto.FilterType;
 import eu.portcdm.messaging.PortCallMessage;
@@ -47,7 +45,6 @@ public class Controller implements Initializable {
 	@FXML
 	private ImageView statusImg, vesselImg; 
 	
-	private ArrayList <String> IDs = new ArrayList<>(Arrays.asList("IMO:9398917", "IMO:9371878", "IMO:9299707", "IMO:9425356", "IMO:9186728", "IMO:9057173", "IMO:9247168"));
 	private PortCDMApi portcdmApi;
 	private Map<String, PortCallSummary> portCallTable;
 	
@@ -57,15 +54,8 @@ public class Controller implements Initializable {
 		portcdmApi = new PortCDMApi(useDevServer);
 		portCallTable = createPortCallTable(10);
 		populateIdList();
-		
-		
-		try {
-			getAndSend();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
+				
+		portCDMTest();				
 	}
 	
 	/**
@@ -111,8 +101,8 @@ public class Controller implements Initializable {
 		etaTimeText.setText(summary.getLastUpdate().substring(10));
 		
 		// Download the image of the vessel and adjust its size
-		Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
-		vesselImg.setImage(vesselPhoto);
+		//Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
+		//vesselImg.setImage(vesselPhoto);
 		vesselImg.setFitWidth(300);
 		vesselImg.setFitHeight(200);
 		
@@ -133,34 +123,32 @@ public class Controller implements Initializable {
 	}
 	
 	/**
-     * Simple method for testing the api to portcdm.
-     * 
-     * @throws ApiException 
-     * @throws InterruptedException 
+     * Simple method for testing the API to portcdm.
+     * If one of the calls to the API fails, this method
+     * will probably give you a null pointer exception.
      */
-    private void getAndSend() throws ApiException, InterruptedException {
-        // Create a queue in portCDM with specified filters
+    private void portCDMTest() {
+        // Create a list of filters, used when creating the queue
         List<Filter> filters = new ArrayList<>();
         Filter f = new Filter();
-        f.setType(FilterType.VESSEL); // Change filter parameters, and maybe add more filters
+        f.setType(FilterType.VESSEL);
         f.setElement("urn:x-mrn:stm:vessel:IMO:9259501");
         filters.add(f);
-        String queueId = portcdmApi.messageBrokerAPI.mqsPost(filters);
+        
+        String queueId = portcdmApi.postQueue(filters);
         System.out.println("Created queue with id: " + queueId);
         
+        // Create a message with a unique message Id
         PortCallMessage pcm = portcdmApi.getExampleMessage();
-
-        try {
-            portcdmApi.AMSSApi.sendMessage(pcm);
-        } catch (eu.portcdm.amss.client.ApiException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.out.println(e.getResponseHeaders() + " ||| " + e.getResponseBody().toString() + " ||| " + e.getMessage());
-        }
+        pcm.setMessageId(UUID.randomUUID().toString());
         
-        // See if we can receive anything
-        List<PortCallMessage> messages = portcdmApi.messageBrokerAPI.mqsQueueGet(queueId);    
+        portcdmApi.sendPortCallMessage(pcm);
+        
+        List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(queueId);
         System.out.println("Messages received: " + messages.size());
+        
+        for (PortCallMessage msg : messages)
+        	System.out.println(msg.getPortCallId());
     }
 		
 }
