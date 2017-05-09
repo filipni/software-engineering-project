@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import eu.portcdm.amss.client.StateupdateApi;
 import eu.portcdm.client.ApiException;
 import eu.portcdm.client.service.PortcallsApi;
 import eu.portcdm.dto.LocationTimeSequence;
@@ -39,10 +40,12 @@ public class PortCDMApi {
 	// Paths to PortCDMs different modules
 	private final String MESSAGE_BROKER_PATH = "mb";
 	private final String PORT_CDM_SERVICES_PATH = "dmp";
+	private final String PORT_CDM_AMSS_PATH = "amss";
 		
 	public SubmissionService submissionService;
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
+	public StateupdateApi AMSSApi; 
 	
 	/**
 	 * Constructor for the PortCDMApi object
@@ -54,11 +57,13 @@ public class PortCDMApi {
 			initSubmissionService(DEV_CONFIG_FILE_NAME, null);
 			initMessageBrokerAPI(DEV_BASE_URL + MESSAGE_BROKER_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 			initPortCallsAPI(DEV_BASE_URL + PORT_CDM_SERVICES_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
+			
 		}
 		else {
 			initSubmissionService(VM_CONFIG_FILE_NAME, null);
 			initMessageBrokerAPI(VM_BASE_URL + MESSAGE_BROKER_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
 			initPortCallsAPI(VM_BASE_URL + PORT_CDM_SERVICES_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
+			initAMSSApi(VM_BASE_URL + PORT_CDM_AMSS_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY); 
 		}	
 	}
 	
@@ -120,6 +125,19 @@ public class PortCDMApi {
 	}
 	
 	/**
+     *  Init API to portCDM amss
+     *  
+     */
+    private void initAMSSApi(String baseUrl, int timeout, String username, String password, String apikey) {
+        eu.portcdm.amss.client.ApiClient connectorClient = new eu.portcdm.amss.client.ApiClient();
+        connectorClient.setBasePath(baseUrl);    
+        connectorClient.addDefaultHeader("X-PortCDM-UserId", username);
+        connectorClient.addDefaultHeader("X-PortCDM-Password", password);
+        connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
+        AMSSApi = new StateupdateApi(connectorClient);
+    }
+	
+	/**
 	 * Get summary of portcalls from portCDM.
 	 * 
 	 * @param max maximum number of portcalls to fetch
@@ -166,12 +184,12 @@ public class PortCDMApi {
         
         //Change dates from 2017-03-23 06:40:00 to 2017-03-23T06:40:00Z 
         PortCallMessage portCallMessage = PortCallMessageBuilder.build(
-                "urn:mrn:stm:portcdm:local_port_call:SEGOT:DHC:52723", //localPortCallId
-                "urn:mrn:stm:portcdm:local_job:FENIX_SMA:990198125", //localJobId
+                "urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:52723", //localPortCallId
+                "urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:990198125", //localJobId
                 stateWrapper, //StateWrapper created above
                 "2017-03-23T06:40:00Z", //Message's time
                 TimeType.ESTIMATED, //Message's timeType
-                "urn:mrn:stm:vessel:IMO:9259501", //vesselId
+                "urn:x-mrn:stm:vessel:IMO:9259501", //vesselId
                 "2017-03-23T06:38:56Z", //reportedAt (optional)
                 "Viktoria", //reportedBy (optional)
                 "urn:mrn:stm:portcdm:message:5eadbb1c-6be7-4cf2-bd6d-f0af5a0c35dc", //groupWith (optional), messageId of the message to group with.
