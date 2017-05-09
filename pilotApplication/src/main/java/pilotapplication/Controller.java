@@ -53,7 +53,7 @@ public class Controller implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = true;
+		boolean useDevServer = false;
 		portcdmApi = new PortCDMApi(useDevServer);
 		portCallTable = createPortCallTable(10);
 		populateIdList();
