@@ -1,102 +1,164 @@
 package pilotapplication;
 
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-
-import eu.portcdm.mb.client.MessageQueueServiceApi;
-
-import se.viktoria.stm.portcdm.connector.common.SubmissionService;
-import se.viktoria.util.Configuration;
-
-import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import eu.portcdm.dto.PortCallSummary;
+import eu.portcdm.mb.dto.Filter;
+import eu.portcdm.mb.dto.FilterType;
+import eu.portcdm.messaging.PortCallMessage;
 
-public class Controller implements Initializable
-{
-	// Two base URLs are provided; one for the local virtual machine and one for the external server
-	private final String BASE_URL_VM = "http://192.168.56.101:8080/";
-	private final String BASE_URL_DEV = "http://dev.portcdm.eu:8080/";
+public class Controller implements Initializable {	
+	@FXML
+	private ListView<String> idListView; 
 	
-	// File path for the configuration file used when creating the submissionService
-	public  final String CONFIG_FILE_NAME = "portcdm.conf";
-	public  final String CONFIG_FILE_DIR = "portcdm";
+	@FXML
+	private Text idText, vesselStatusText, bookTimeText, etaTimeText;
 	
-	// These objects will be our interface to PortCDM 
-	private SubmissionService submissionService;
-	private MessageQueueServiceApi messageBrokerAPI;
+	@FXML 
+	private GridPane gridPane1; 
+	
+	@FXML 
+	private HBox hBoxRec1, hBoxRec2; 
+	
+	@FXML
+	private AnchorPane vesselInfoPane; 
+	
+	@FXML
+	private ImageView statusImg, vesselImg; 
+	
+	private PortCDMApi portcdmApi;
+	private Map<String, PortCallSummary> portCallTable;
 	
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {		
-		initSubmissionService(CONFIG_FILE_NAME, CONFIG_FILE_DIR);	
-		initMessageBrokerAPI(BASE_URL_VM + "mb", 20000);
+	public void initialize(URL arg0, ResourceBundle arg1) {	
+		boolean useDevServer = true;
+		portcdmApi = new PortCDMApi(useDevServer);
+		portCallTable = createPortCallTable(10);
+		populateIdList();
+				
+		//portCDMTest();				
 	}
 	
-	private void initSubmissionService(String configFileName, String configFileDir) {
-		Configuration config = new Configuration(
-				configFileName, 
-				configFileDir,
-				new Predicate<Map.Entry<Object, Object>>() {
-					@Override
-					public boolean test(Map.Entry<Object, Object> objectObjectEntry) {
-						return !objectObjectEntry.getKey().toString().equals("pass");
-				}	
-		});
-		config.reload();		
+	/**
+	 * Creates a hashmap of portcall summaries fetched from PortCDM.
+	 * Each summary is index by its IMO. 
+	 * 
+	 * @param max maximum number of summaries to fetch
+	 * @return hashmap with the fetched portcall summaries
+	 */
+	private HashMap<String, PortCallSummary> createPortCallTable(int max) {
+		HashMap<String, PortCallSummary> map = new HashMap<>();
+		List<PortCallSummary> summaries = portcdmApi.getPortCalls(max);
+		for (PortCallSummary s : summaries) {
+			map.put(s.getVessel().getImo(), s);
+		}
+		return map;
+	}
+	
+	/**
+	 * Populates the idListView with ids found in portCallTable.
+	 */	
+	private void populateIdList() {
+		ObservableList<String> listElements = FXCollections.observableArrayList(portCallTable.keySet());
+		idListView.setItems(listElements); // What if listElements is empty?
+	}
+	
+	/**
+	 * This method handles mouse clicks from the idListView.
+	 * It makes a new panel visible containing information about the vessel corresponding to the clicked id.
+	 * 
+	 * @param e mouse event with information about the clicked element
+	 */	
+	@FXML
+	public void handleMouseClick(MouseEvent event) {
+		String id = idListView.getSelectionModel().getSelectedItem();
+		idText.setText(id);
+		vesselInfoPane.setVisible(true);
 		
-		submissionService = new SubmissionService();
-		submissionService.addConnectors(config);
-	}
-	
-	private void initMessageBrokerAPI(String baseUrl, int timeout) {
-		eu.portcdm.mb.client.ApiClient connectorClient = new eu.portcdm.mb.client.ApiClient();
-		connectorClient.setBasePath(baseUrl);
-		connectorClient.setConnectTimeout(timeout);
-		messageBrokerAPI = new MessageQueueServiceApi(connectorClient);
-	}
+		// Get the portcall summary corresponding to the clicked list element 
+		PortCallSummary summary = portCallTable.get(id);
+		
+		// Download the image of the vessel and adjust its size
+		Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
+		vesselImg.setImage(vesselPhoto);
+		
+		// Give it some nice round corners
+		Rectangle clip = new Rectangle(vesselImg.getFitWidth(), vesselImg.getFitHeight());
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        vesselImg.setClip(clip);
+		
+		// Set all portcalls that do not have an IMO starting with "9" to incoming
+		if (!id.startsWith("9")) {
+			statusImg.setImage(new Image("pilotapplication/img/Inkommande.png"));
+			vesselStatusText.setText("Inkommande");
+		}	
+		else {
+			statusImg.setImage(new Image("pilotapplication/img/Avgående.png"));
+			vesselStatusText.setText("Avgående");
+		}
+	}	
 	
 	@FXML
-	private Button calcButton;
-	
-	@FXML
-	private Label distLabel, speedLabel, resultLabel;
-	
-	@FXML
-	private Text resultText;
-	
-	@FXML
-	private TextField distTextField, speedTextField;
-	
-	public void buttonHandler(ActionEvent event) {
-		double distance = Double.parseDouble(distTextField.getText());
-		double speed = Double.parseDouble(speedTextField.getText()); 
-		int result = (int) calculateDistance(distance, speed);
-		
-		LocalTime dt = new LocalTime();
-		LocalTime klockslag = dt.plusMinutes(result);
-		
-		
-		resultText.setText("Anländer om " + Integer.toString(result/60) + ":" + Integer.toString(result%60) + " (h:min)" + "\n"
-		+ "Klockslag: " + klockslag);
-		
-		 
+	public void closeVesselPane() {
+		vesselInfoPane.setVisible(false);
 	}
 	
-	private double calculateDistance(double distance, double speed) {
-		return distance/speed*60; // Tid=distans/hastighet*60 ex. 10M/12knop*60 = 50min
-	}
-	
-	
+	/**
+     * Simple method for testing the API to portcdm.
+     * If one of the calls to the API fails, this method
+     * will probably give you a null pointer exception.
+     */
+    private void portCDMTest() {
+        // Create a list of filters, used when creating the queue
+        List<Filter> filters = new ArrayList<>();
+        Filter f = new Filter();
+        f.setType(FilterType.VESSEL);
+        f.setElement("urn:x-mrn:stm:vessel:IMO:9259501");
+        filters.add(f);
+        
+        String queueId = portcdmApi.postQueue(filters);
+        System.out.println("Created queue with id: " + queueId);
+        
+        // Create a message with a unique message Id
+        PortCallMessage pcm = portcdmApi.getExampleMessage();
+        pcm.setMessageId(UUID.randomUUID().toString());
+        
+        portcdmApi.sendPortCallMessage(pcm);
+        
+        // Wait for a while to make sure the message arrives at the queue
+        try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        
+        List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(queueId);
+        System.out.println("Messages received: " + messages.size());
+        
+        for (PortCallMessage msg : messages)
+        	System.out.println(msg.getPortCallId());
+    }
+		
 }

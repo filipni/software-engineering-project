@@ -1,1 +1,30 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+#rootPane {
+	-fx-border-color: black;
+	-fx-background-image: url("img/Sjöfartsverket_logo.png");
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+
+.list-view {
+	-fx-background-insets: 0; /* Remove border */
+}
+
+.list-view .list-cell{
+	-fx-text-fill: black;
+	-fx-border-color: black;	
+}
+
+.list-view .list-cell:selected {
+	-fx-background-color: rgb(169,188,204);
+}
+
+.transRect {
+	-fx-background-color: rgb(169,188,204, 0.7); /* Also sets opacity */
+	-fx-border-color: black;
+	
+	/* Round corners */
+	-fx-border-radius: 5;	
+	-fx-background-radius: 5;
+	
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
