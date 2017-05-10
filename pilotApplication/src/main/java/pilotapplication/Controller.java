@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import eu.portcdm.dto.PortCallSummary;
@@ -51,12 +52,12 @@ public class Controller implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = false;
+		boolean useDevServer = true;
 		portcdmApi = new PortCDMApi(useDevServer);
 		portCallTable = createPortCallTable(10);
 		populateIdList();
 				
-		portCDMTest();				
+		//portCDMTest();				
 	}
 	
 	/**
@@ -95,17 +96,18 @@ public class Controller implements Initializable {
 		idText.setText(id);
 		vesselInfoPane.setVisible(true);
 		
-		// Get the portcall summary corresponding to the list element,
-		// and update the information in the vesselInfoPane. 
+		// Get the portcall summary corresponding to the clicked list element 
 		PortCallSummary summary = portCallTable.get(id);
-		bookTimeText.setText(summary.getCreatedAt().substring(10));
-		etaTimeText.setText(summary.getLastUpdate().substring(10));
 		
 		// Download the image of the vessel and adjust its size
 		Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
 		vesselImg.setImage(vesselPhoto);
-		vesselImg.setFitWidth(300);
-		vesselImg.setFitHeight(200);
+		
+		// Give it some nice round corners
+		Rectangle clip = new Rectangle(vesselImg.getFitWidth(), vesselImg.getFitHeight());
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        vesselImg.setClip(clip);
 		
 		// Set all portcalls that do not have an IMO starting with "9" to incoming
 		if (!id.startsWith("9")) {
@@ -147,7 +149,7 @@ public class Controller implements Initializable {
         
         // Wait for a while to make sure the message arrives at the queue
         try {
-			TimeUnit.SECONDS.sleep(10);
+			TimeUnit.SECONDS.sleep(5);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -220,7 +220,7 @@ public class PortCDMApi {
         		"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:52723", //localPortCallId
         		"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:990198125", //localJobId
                 stateWrapper, //StateWrapper created above
-                "2017-03-23T06:44:00Z", //Message's time
+                "2017-03-23T06:45:00Z", //Message's time
                 TimeType.ESTIMATED, //Message's timeType
                 "urn:x-mrn:stm:vessel:IMO:9259501", //vesselId
                 "2017-03-23T06:38:51Z", //reportedAt (optional)

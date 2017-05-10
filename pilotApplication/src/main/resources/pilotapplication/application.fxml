@@ -27,20 +27,20 @@
                </font>
             </Text>
             <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" visible="true" />
-            <ImageView fx:id="vesselImg" fitHeight="199.0" fitWidth="298.0" layoutX="102.0" layoutY="251.0" pickOnBounds="true" preserveRatio="true" styleClass="vesselImage" />
+            <ImageView id="vesselImage" fx:id="vesselImg" fitHeight="199.0" fitWidth="298.0" layoutX="102.0" layoutY="251.0" pickOnBounds="true" />
             <Button fx:id="closeButton" layoutX="435.0" mnemonicParsing="false" onAction="#closeVesselPane" text="X" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Text fx:id="vesselStatusText" fill="#000000cc" layoutX="4.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429" />
-            <Text fill="#000000cc" layoutX="82.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" textAlignment="CENTER" AnchorPane.leftAnchor="82.0">
+            <Text fill="#000000cc" layoutX="83.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" textAlignment="CENTER" AnchorPane.leftAnchor="83.0">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fill="#000000cc" layoutX="277.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA mötesplats" AnchorPane.rightAnchor="64.052734375">
+            <Text fill="#000000cc" layoutX="282.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA mötesplats" textAlignment="CENTER" AnchorPane.rightAnchor="63.052734375">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fx:id="bookTimeText" fill="#000000cc" layoutX="67.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.leftAnchor="67.0">
+            <Text fx:id="bookTimeText" fill="#000000cc" layoutX="69.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.leftAnchor="67.0">
                <font>
                   <Font size="20.0" />
                </font>
