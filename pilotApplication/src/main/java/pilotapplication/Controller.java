@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -101,8 +102,8 @@ public class Controller implements Initializable {
 		etaTimeText.setText(summary.getLastUpdate().substring(10));
 		
 		// Download the image of the vessel and adjust its size
-		//Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
-		//vesselImg.setImage(vesselPhoto);
+		Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
+		vesselImg.setImage(vesselPhoto);
 		vesselImg.setFitWidth(300);
 		vesselImg.setFitHeight(200);
 		
@@ -143,6 +144,13 @@ public class Controller implements Initializable {
         pcm.setMessageId(UUID.randomUUID().toString());
         
         portcdmApi.sendPortCallMessage(pcm);
+        
+        // Wait for a while to make sure the message arrives at the queue
+        try {
+			TimeUnit.SECONDS.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         
         List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(queueId);
         System.out.println("Messages received: " + messages.size());

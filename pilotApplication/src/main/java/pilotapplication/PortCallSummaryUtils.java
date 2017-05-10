@@ -56,7 +56,7 @@ public class PortCallSummaryUtils {
 		Image img = null;
 		try {
 			URLConnection conn = new URL(url).openConnection();
-			conn.setRequestProperty("User-Agent", "Wget/1.13.4 (linux-gnu)");
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 			InputStream in = conn.getInputStream();
 			img = new Image(in);
 		} catch (Exception e) {
