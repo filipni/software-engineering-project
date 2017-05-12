@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -18,7 +21,7 @@
             <ListView fx:id="idListView" layoutX="21.0" layoutY="49.0" onMouseClicked="#handleMouseClick" prefHeight="518.0" prefWidth="180.0" />
          </children>
       </AnchorPane>
-      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="483.0" prefWidth="493.0" styleClass="transRect" stylesheets="@application.css" visible="false">
+      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="380.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css" visible="false">
          <children>
             <Text fx:id="idText" fill="#000000cc" layoutX="13.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.7294921875">
                <font>
@@ -26,7 +29,6 @@
                </font>
             </Text>
             <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView id="vesselImage" fx:id="vesselImg" fitHeight="199.0" fitWidth="298.0" layoutX="102.0" layoutY="251.0" pickOnBounds="true" />
             <Text fx:id="vesselStatusText" fill="#3c8dc2cc" layoutX="4.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429">
                <font>
                   <Font size="18.0" />
@@ -51,6 +53,36 @@
                   <Font size="20.0" />
                </font>
             </Text>
+            <Button id="serviceButton" layoutX="321.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Förtöjning" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="efterfrågad" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button id="serviceButton" layoutX="189.0" layoutY="292.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Lots" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="nekad" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button id="serviceButton" layoutX="56.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Lots" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="bekräftad" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
          </children>
       </AnchorPane>
    </children>

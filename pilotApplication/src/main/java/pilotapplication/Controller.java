@@ -45,7 +45,7 @@ public class Controller implements Initializable {
 	private AnchorPane vesselInfoPane; 
 	
 	@FXML
-	private ImageView statusImg, vesselImg; 
+	private ImageView statusImg; 
 	
 	private PortCDMApi portcdmApi;
 	private Map<String, PortCallSummary> portCallTable;
@@ -98,16 +98,6 @@ public class Controller implements Initializable {
 		
 		// Get the portcall summary corresponding to the clicked list element 
 		PortCallSummary summary = portCallTable.get(id);
-		
-		// Download the image of the vessel and adjust its size
-		Image vesselPhoto = PortCallSummaryUtils.downloadVesselImage(summary);
-		vesselImg.setImage(vesselPhoto);
-		
-		// Give it some nice round corners
-		Rectangle clip = new Rectangle(vesselImg.getFitWidth(), vesselImg.getFitHeight());
-        clip.setArcWidth(20);
-        clip.setArcHeight(20);
-        vesselImg.setClip(clip);
 		
 		// Set all portcalls that do not have an IMO starting with "9" to incoming
 		if (!id.startsWith("9")) {
