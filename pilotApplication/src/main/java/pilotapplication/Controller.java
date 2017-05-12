@@ -42,7 +42,7 @@ public class Controller implements Initializable {
 	private HBox hBoxRec1, hBoxRec2; 
 	
 	@FXML
-	private AnchorPane vesselInfoPane; 
+	private AnchorPane vesselInfoPane, phonePane; 
 	
 	@FXML
 	private ImageView statusImg; 
@@ -94,7 +94,9 @@ public class Controller implements Initializable {
 	public void handleMouseClick(MouseEvent event) {
 		String id = idListView.getSelectionModel().getSelectedItem();
 		idText.setText(id);
+		
 		vesselInfoPane.setVisible(true);
+		phonePane.setVisible(true);
 		
 		// Get the portcall summary corresponding to the clicked list element 
 		PortCallSummary summary = portCallTable.get(id);
