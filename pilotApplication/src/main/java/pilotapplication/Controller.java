@@ -120,11 +120,6 @@ public class Controller implements Initializable {
 		}
 	}	
 	
-	@FXML
-	public void closeVesselPane() {
-		vesselInfoPane.setVisible(false);
-	}
-	
 	/**
      * Simple method for testing the API to portcdm.
      * If one of the calls to the API fails, this method
