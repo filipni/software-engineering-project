@@ -8,9 +8,11 @@
 	-fx-background-position: center;
 }
 
-#serviceButton {
+.serviceButton {
 	-fx-background-color: #39b54a; /* green */
+	-fx-text-fill: white;
 	-fx-background-radius: 7;
+	-fx-background-insets: 0;
 }
 
 .list-view {

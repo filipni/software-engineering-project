@@ -12,14 +12,16 @@
 
 <AnchorPane id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="768.0" prefWidth="1366.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pilotapplication.Controller">
    <children>
-      <AnchorPane id="listPane" layoutX="30.0" layoutY="57.0" prefHeight="558.0" prefWidth="222.0" styleClass="transRect">
+      <AnchorPane id="listPane" layoutX="30.0" layoutY="57.0" prefHeight="657.0" prefWidth="222.0" styleClass="transRect">
          <children>
             <Text fill="#000000cc" layoutX="6.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lotsoperationer" textAlignment="CENTER" wrappingWidth="207.7294921875">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <ListView fx:id="idListView" layoutX="21.0" layoutY="49.0" onMouseClicked="#handleMouseClick" prefHeight="518.0" prefWidth="180.0" />
+            <ListView fx:id="idListView" layoutX="21.0" layoutY="49.0" onMouseClicked="#handleMouseClick" prefHeight="556.0" prefWidth="180.0" />
+            <Button layoutX="56.0" layoutY="605.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" styleClass="serviceButton" text="Uppdatera" />
+            <Label layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
          </children>
       </AnchorPane>
       <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="380.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css" visible="false">
@@ -54,7 +56,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Button id="serviceButton" layoutX="321.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -64,7 +66,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button id="serviceButton" layoutX="189.0" layoutY="292.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" stylesheets="@application.css">
+            <Button layoutX="189.0" layoutY="292.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -74,7 +76,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button id="serviceButton" layoutX="56.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" stylesheets="@application.css">
+            <Button layoutX="56.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -88,11 +90,61 @@
       </AnchorPane>
       <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0" visible="false">
          <children>
-            <ImageView fitHeight="499.0" fitWidth="314.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="499.0" fitWidth="411.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@img/phone.png" />
                </image>
             </ImageView>
+            <ImageView fitHeight="153.0" fitWidth="176.0" layoutX="83.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@img/abc.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="89.0" layoutY="82.0" text="Mobil enhet">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Button layoutX="61.0" layoutY="273.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Påbörja" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="lotsning" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button layoutX="166.0" layoutY="273.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Lots" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="ombord" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button layoutX="61.0" layoutY="330.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Lots" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="vid kaj" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button layoutX="166.0" layoutY="330.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Lots" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="avhämtad" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
          </children>
       </AnchorPane>
    </children>
