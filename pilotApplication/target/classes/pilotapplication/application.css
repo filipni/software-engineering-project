@@ -1,6 +1,8 @@
 #rootPane {
-	-fx-border-color: black;
-	-fx-background-color: #f0f0f0;
+	-fx-border-color: #3c8dc2; /* blue */
+	-fx-border-width: 40 0 40 0; /* only borders above and below */
+	
+	-fx-background-color: #f0f0f0; /* grey */
 	-fx-background-image: url("img/Sjöfartsverket_logo.png");
 	-fx-background-repeat: no-repeat;
 	-fx-background-position: center;
@@ -16,7 +18,7 @@
 }
 
 .list-view .list-cell:selected {
-	-fx-text-fill: #39b54a;
+	-fx-text-fill: #39b54a; /* green */
 }
 
 .transRect {

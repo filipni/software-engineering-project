@@ -8,24 +8,24 @@
 
 <AnchorPane id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="680.0" prefWidth="1034.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pilotapplication.Controller">
    <children>
-      <AnchorPane id="listPane" layoutX="30.0" layoutY="35.0" prefHeight="586.0" prefWidth="222.0" styleClass="transRect">
+      <AnchorPane id="listPane" layoutX="30.0" layoutY="57.0" prefHeight="558.0" prefWidth="222.0" styleClass="transRect">
          <children>
             <Text fill="#000000cc" layoutX="6.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lotsoperationer" textAlignment="CENTER" wrappingWidth="207.7294921875">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <ListView fx:id="idListView" layoutX="21.0" layoutY="49.0" onMouseClicked="#handleMouseClick" prefHeight="516.0" prefWidth="180.0" />
+            <ListView fx:id="idListView" layoutX="21.0" layoutY="49.0" onMouseClicked="#handleMouseClick" prefHeight="518.0" prefWidth="180.0" />
          </children>
       </AnchorPane>
-      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="273.0" layoutY="35.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="483.0" prefWidth="493.0" styleClass="transRect" stylesheets="@application.css" visible="false">
+      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="483.0" prefWidth="493.0" styleClass="transRect" stylesheets="@application.css" visible="false">
          <children>
             <Text fx:id="idText" fill="#000000cc" layoutX="13.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.7294921875">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" visible="true" />
+            <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView id="vesselImage" fx:id="vesselImg" fitHeight="199.0" fitWidth="298.0" layoutX="102.0" layoutY="251.0" pickOnBounds="true" />
             <Text fx:id="vesselStatusText" fill="#3c8dc2cc" layoutX="4.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429">
                <font>
