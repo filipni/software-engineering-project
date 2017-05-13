@@ -1,7 +1,5 @@
 package pilotapplication;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -26,7 +24,7 @@ import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 import se.viktoria.util.Configuration;
 
 public class PortCDMApi {
-	
+
 	// Parameters for the external development machine
 	private final String DEV_BASE_URL = "http://dev.portcdm.eu:8080/";
 	private final String DEV_USERNAME = "viktoria";
@@ -34,7 +32,7 @@ public class PortCDMApi {
 	private final String DEV_API_KEY = "pilot";
 	private final int DEV_TIMEOUT = 20000;
 	private  final String DEV_CONFIG_FILE_NAME = "dev_portcdm.conf";
-			
+		
 	// Parameters for the local virtual machine
 	private final String VM_BASE_URL = "http://192.168.56.101:8080/";
 	private final String VM_USERNAME = "porter";
@@ -42,17 +40,17 @@ public class PortCDMApi {
 	private final String VM_API_KEY = "pilot";	
 	private final int VM_TIMEOUT = 7000;
 	private  final String VM_CONFIG_FILE_NAME = "vm_portcdm.conf";
-	
+
 	// Paths to PortCDMs different modules
 	private final String MESSAGE_BROKER_PATH = "mb";
 	private final String PORT_CDM_SERVICES_PATH = "dmp";
 	private final String PORT_CDM_AMSS_PATH = "amss";
-		
+	
 	public SubmissionService submissionService;
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
 	public StateupdateApi AMSSApi; 
-	
+
 	/**
 	 * Constructor for the PortCDMApi object
 	 * 
@@ -72,7 +70,7 @@ public class PortCDMApi {
 			initAMSSApi(VM_BASE_URL + PORT_CDM_AMSS_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY); 
 		}	
 	}
-	
+
 	/**
 	 * Init connector (submissionService) to portCDM.
 	 * 
@@ -94,7 +92,7 @@ public class PortCDMApi {
 		submissionService = new SubmissionService();
 		submissionService.addConnectors(config);
 	}
-	
+
 	/**
 	 * Init API to portCDM message broker.
 	 */
@@ -107,7 +105,7 @@ public class PortCDMApi {
         connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
 		messageBrokerAPI = new MessageQueueServiceApi(connectorClient);
 	}
-	
+
 	/**
 	 * Init API to portCDM port call manager.
 	 */
@@ -120,7 +118,7 @@ public class PortCDMApi {
         connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
 		portCallsAPI = new PortcallsApi(connectorClient);				
 	}
-	
+
 	/**
      *  Init API to portCDM assisted message submission service (AMSS)
      */
@@ -132,7 +130,7 @@ public class PortCDMApi {
         connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
         AMSSApi = new StateupdateApi(connectorClient);
     }
-	
+
 	/**
 	 * Get summary of portcalls from portCDM.
 	 * 
@@ -143,6 +141,7 @@ public class PortCDMApi {
 		List<PortCallSummary> portcalls = null;
 		try {
 			portcalls = portCallsAPI.getAllPortCalls(max);
+			System.out.println("Fetched " + portcalls.size() + " portcalls.");
 		} 
 		catch (ApiException e) {
 			System.out.println("Couldn't fetch portcalls.");
@@ -150,7 +149,7 @@ public class PortCDMApi {
 		}
 		return portcalls;
 	}
-	
+
 	/**
 	 * Submit a portcall message to PortCDM. 
 	 * 
@@ -159,13 +158,17 @@ public class PortCDMApi {
 	public void sendPortCallMessage(PortCallMessage pcm) {
 		try {
             AMSSApi.sendMessage(pcm);
+            String[] vesselId = pcm.getVesselId().split(":");
+            int idLength = vesselId.length;
+            String imo = vesselId[idLength - 1];
+            System.out.println("Message successfully sent. (IMO: " + imo + ")");
         } 
         catch (eu.portcdm.amss.client.ApiException e) {
         	System.out.println("Couldn't send message.");
         	System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
         }
 	}
-	
+
 	/**
 	 * Post a queue with the given filters to portCDM.
 	 * 
@@ -176,6 +179,7 @@ public class PortCDMApi {
 		String queueId = null;
 		try {
 			queueId = messageBrokerAPI.mqsPost(filters);
+			System.out.println("Created queue with id: " + queueId);
 		} 
 		catch (eu.portcdm.mb.client.ApiException e) {
 			System.out.println("Couldn't post queue");
@@ -183,7 +187,7 @@ public class PortCDMApi {
 		}
 		return queueId;
 	}
-	
+
 	/**
 	 * Fetch all messages from the queue with the given id.
 	 * 
@@ -194,6 +198,7 @@ public class PortCDMApi {
 		List<PortCallMessage> messages = null;
 		try {
 			messages = messageBrokerAPI.mqsQueueGet(queueId);
+			System.out.println("Received " + messages.size() + " message(s) from queue " + queueId);
 		} 
 		catch (eu.portcdm.mb.client.ApiException e) {
 			System.out.println("Couldn't fetch messages.");
@@ -201,7 +206,7 @@ public class PortCDMApi {
 		} 
 		return messages;
 	}
-	
+
     public PortCallMessage createLocationMessage(String vesselId, LocationReferenceObject referenceObject, LocationTimeSequence sequence, LogicalLocation location, String timestamp, TimeType timeType) {
         StateWrapper wrapper = new StateWrapper(referenceObject, sequence, location);
         return portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, timeType);
