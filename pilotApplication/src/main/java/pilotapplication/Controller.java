@@ -1,7 +1,9 @@
 package pilotapplication;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +22,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-
+import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
+import eu.portcdm.dto.LocationTimeSequence;
 import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.mb.dto.Filter;
 import eu.portcdm.mb.dto.FilterType;
+import eu.portcdm.messaging.LocationReferenceObject;
+import eu.portcdm.messaging.LogicalLocation;
 import eu.portcdm.messaging.PortCallMessage;
+import eu.portcdm.messaging.ServiceObject;
+import eu.portcdm.messaging.ServiceTimeSequence;
+import eu.portcdm.messaging.TimeType;
 
 public class Controller implements Initializable {	
 	@FXML
@@ -52,12 +59,12 @@ public class Controller implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = true;
+		boolean useDevServer = false;
 		portcdmApi = new PortCDMApi(useDevServer);
 		portCallTable = createPortCallTable(10);
 		populateIdList();
 				
-		//portCDMTest();				
+		portCDMTest();				
 	}
 	
 	/**
@@ -98,9 +105,6 @@ public class Controller implements Initializable {
 		vesselInfoPane.setVisible(true);
 		phonePane.setVisible(true);
 		
-		// Get the portcall summary corresponding to the clicked list element 
-		PortCallSummary summary = portCallTable.get(id);
-		
 		// Set all portcalls that do not have an IMO starting with "9" to incoming
 		if (!id.startsWith("9")) {
 			statusImg.setImage(new Image("pilotapplication/img/Inkommande.png"));
@@ -128,15 +132,16 @@ public class Controller implements Initializable {
         String queueId = portcdmApi.postQueue(filters);
         System.out.println("Created queue with id: " + queueId);
         
-        // Create a message with a unique message Id
-        PortCallMessage pcm = portcdmApi.getExampleMessage();
-        pcm.setMessageId(UUID.randomUUID().toString());
+        // Create a message
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new Date());
+        StateWrapper wrapper = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.DEPARTURE_FROM, LogicalLocation.VESSEL);
+        PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper("urn:x-mrn:stm:vessel:IMO:9259501", wrapper, timestamp, TimeType.ACTUAL);
         
         portcdmApi.sendPortCallMessage(pcm);
         
         // Wait for a while to make sure the message arrives at the queue
         try {
-			TimeUnit.SECONDS.sleep(5);
+			TimeUnit.SECONDS.sleep(2);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -145,7 +150,7 @@ public class Controller implements Initializable {
         System.out.println("Messages received: " + messages.size());
         
         for (PortCallMessage msg : messages)
-        	System.out.println(msg.getPortCallId());
+        	System.out.println(msg.getPortCallId()); 
     }
 		
 }
