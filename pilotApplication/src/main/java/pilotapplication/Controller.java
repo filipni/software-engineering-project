@@ -25,7 +25,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 import eu.portcdm.dto.LocationTimeSequence;
-import eu.portcdm.dto.LocationType;
 import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.mb.dto.Filter;
 import eu.portcdm.mb.dto.FilterType;
@@ -61,14 +60,16 @@ public class Controller implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = false;
+		boolean useDevServer = true;
 		portcdmApi = new PortCDMApi(useDevServer);
 		portCallTable = createPortCallTable(10);
 		populateIdList();
 		
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
 		
-		portCDMTest();				
+		/*
+		portCDMTest();
+		*/				
 	}
 	
 	/**
