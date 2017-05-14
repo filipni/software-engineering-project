@@ -230,8 +230,8 @@ public class PortCDMApi {
      */
     public PortCallMessage portCallMessageFromStateWrapper(String vesselId, StateWrapper wrapper, String timestamp, TimeType timeType) {
     	PortCallMessage pcm = PortCallMessageBuilder.build(
-        		null, //localPortCallId
-        		null, //localJobId
+    			"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:52723", //localPortCallId
+    			"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:990198125", //localJobId
                 wrapper, //StateWrapper created above
                 timestamp, //Message's time
                 timeType, //Message's timeType

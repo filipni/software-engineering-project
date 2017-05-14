@@ -24,6 +24,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
+import eu.portcdm.dto.LocationState;
 import eu.portcdm.dto.LocationTimeSequence;
 import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.mb.dto.Filter;
@@ -57,19 +58,34 @@ public class Controller implements Initializable {
 	private PortCDMApi portcdmApi;
 	private SimpleDateFormat dateFormat;
 	private Map<String, PortCallSummary> portCallTable;
+	private String requestQueueId;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = true;
+		boolean useDevServer = false;
 		portcdmApi = new PortCDMApi(useDevServer);
 		portCallTable = createPortCallTable(10);
 		populateIdList();
 		
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
 		
-		/*
+		createPilotageRequestQueue();
 		portCDMTest();
-		*/				
+					
+	}
+	
+	/**
+	 * Create a queue in portCDM for pilotage request messages
+	 */	
+	private void createPilotageRequestQueue() {
+		List<Filter> filters = new ArrayList<>();
+        Filter timeSequence = new Filter();
+
+        timeSequence.setType(FilterType.TIME_SEQUENCE);
+        timeSequence.setElement(ServiceTimeSequence.REQUESTED.toString());
+        filters.add(timeSequence);    
+        
+        requestQueueId = portcdmApi.postQueue(filters);
 	}
 	
 	/**
@@ -173,18 +189,9 @@ public class Controller implements Initializable {
      * will probably give you a null pointer exception.
      */
     private void portCDMTest() {
-        // Create a list of filters, used when creating the queue
-        List<Filter> filters = new ArrayList<>();
-        Filter f = new Filter();
-        f.setType(FilterType.VESSEL);
-        f.setElement("urn:x-mrn:stm:vessel:IMO:9259501");
-        filters.add(f);
-        
-        String queueId = portcdmApi.postQueue(filters);
-        
         // Create a message
         String timestamp = dateFormat.format(new Date());
-        StateWrapper wrapper = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.DEPARTURE_FROM, LogicalLocation.VESSEL);
+        StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
         PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper("urn:x-mrn:stm:vessel:IMO:9259501", wrapper, timestamp, TimeType.ACTUAL);
         
         portcdmApi.sendPortCallMessage(pcm);
@@ -196,10 +203,11 @@ public class Controller implements Initializable {
 			e.printStackTrace();
 		}
         
-        List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(queueId);
+        List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(requestQueueId);
         
-        for (PortCallMessage msg : messages)
-        	System.out.println(msg.getPortCallId()); 
+        for (PortCallMessage msg : messages) {
+        	System.out.println(msg.getPortCallId());
+        }
     }
 		
 }
