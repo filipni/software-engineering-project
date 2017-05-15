@@ -24,7 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
-import eu.portcdm.dto.LocationState;
 import eu.portcdm.dto.LocationTimeSequence;
 import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.mb.dto.Filter;
@@ -206,7 +205,7 @@ public class Controller implements Initializable {
         List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(requestQueueId);
         
         for (PortCallMessage msg : messages) {
-        	System.out.println(msg.getPortCallId());
+        	System.out.println(msg.getMessageId());
         }
     }
 		

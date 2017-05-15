@@ -241,7 +241,7 @@ public class PortCDMApi {
                 null, //groupWith (optional), messageId of the message to group with.
                 null //comment (optional)
         );
-    	pcm.setMessageId(UUID.randomUUID().toString());
+    	pcm.setMessageId("urn:x-mrn:stm:portcdm:message:" + UUID.randomUUID().toString());
     	return pcm;
     }
 }
