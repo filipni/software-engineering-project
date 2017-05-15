@@ -49,7 +49,7 @@ public class Controller implements Initializable {
 	private GridPane gridPane1; 
 	
 	@FXML 
-	private Label updateLabel;
+	private Label updateLabel, confirmationLabel;
 	
 	@FXML 
 	private HBox hBoxRec1, hBoxRec2; 
@@ -75,13 +75,31 @@ public class Controller implements Initializable {
 		sendTestMessages(3);								
 	}
 	
-	@FXML
-	public void updateRequestList(ActionEvent event) {
-		updatePortCallTable();
-		populateIdList();
-		String updateDate = dateFormat.format(new Date()).split("T")[0]; // Take just first part of date
-		updateLabel.setText("Uppdaterad: " + updateDate);
-	}
+	/**
+     * Sends a given number of pilotage requests to the backend
+     * 
+     * @param nrToSend number of messages to send
+     */
+	
+	private final int MIN_VESSEL_ID = 1000000;
+	private final int MAX_VESSEL_ID = 9999999;
+	
+    private void sendTestMessages(int nrToSend) {
+	    for (int i = 0; i < nrToSend; i++) {
+	    	int vesselIMO = ThreadLocalRandom.current().nextInt(MIN_VESSEL_ID, MAX_VESSEL_ID + 1);
+	        String timestamp = dateFormat.format(new Date());
+		    StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+		    PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(vesselIMO), wrapper, timestamp, TimeType.ACTUAL);
+		    portcdmApi.sendPortCallMessage(pcm);
+	    }    
+           
+        // Wait for a while to make sure the message arrives at the queue
+        try {
+			TimeUnit.SECONDS.sleep(3);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
 	
 	/**
 	 * Create a queue in portCDM for pilotage request messages
@@ -148,6 +166,14 @@ public class Controller implements Initializable {
 		vesselInfoPane.setVisible(true);
 		phonePane.setVisible(true);
 		
+		PortCallInfo pcInfo = portCallTable.get(id);
+		if (pcInfo.getConfirmationStatus()) {
+			confirmationLabel.setVisible(true);
+		}
+		else {
+			confirmationLabel.setVisible(false);
+		}
+		
 		// Set all portcalls that do not have an IMO starting with "9" to incoming
 		if (!id.startsWith("9")) {
 			statusImg.setImage(new Image("pilotapplication/img/Inkommande.png"));
@@ -157,6 +183,14 @@ public class Controller implements Initializable {
 			statusImg.setImage(new Image("pilotapplication/img/Avgående.png"));
 			vesselStatusText.setText("Avgående");
 		}
+	}
+	
+	@FXML
+	public void updateRequestList(ActionEvent event) {
+		updatePortCallTable();
+		populateIdList();
+		String updateDate = dateFormat.format(new Date()).split("T")[0]; // Take just first part of date
+		updateLabel.setText("Uppdaterad: " + updateDate);
 	}
 	
 	@FXML
@@ -182,12 +216,25 @@ public class Controller implements Initializable {
         PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperService, timestamp, TimeType.ACTUAL);
         portcdmApi.sendPortCallMessage(pcmService);
         
-        // Remove call from request list
-        portCallTable.remove(imo);
+        removeRequest(imo);  
+	}
+	
+	@FXML
+	public void pilotageDenied(ActionEvent event) {
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+		StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.DENIED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperService, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmService);
+        
+        removeRequest(imo);
+	}
+	
+	private void removeRequest(String imo) {
+		portCallTable.remove(imo);
         populateIdList();
         vesselInfoPane.setVisible(false);
 		phonePane.setVisible(false);
-        
 	}
 	
 	@FXML
@@ -208,6 +255,24 @@ public class Controller implements Initializable {
         portcdmApi.sendPortCallMessage(pcmLocation);
 	}
 	
+	@FXML
+	public void pilotageConfirmed(ActionEvent event) {
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+		StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.CONFIRMED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperService, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmService);
+        PortCallInfo pcInfo = portCallTable.get(imo);
+        
+        pcInfo.confirmRequest();
+        confirmationLabel.setVisible(true);
+	}
+	
+	@FXML 
+	public void mooringRequested(ActionEvent event) {
+		System.out.println("Not implemented yet.");
+	}
+	
 	private String createVesselIdFromIMO(String imo) {
 		return "urn:x-mrn:stm:vessel:IMO:" + imo;
 	}
@@ -215,31 +280,5 @@ public class Controller implements Initializable {
 	private String createVesselIdFromIMO(int imo) {
 		return "urn:x-mrn:stm:vessel:IMO:" + imo;
 	}
-	
-	/**
-     * Sends a given number of pilotage requests to the backend
-     * 
-     * @param nrToSend number of messages to send
-     */
-	
-	private final int MIN_VESSEL_ID = 1000000;
-	private final int MAX_VESSEL_ID = 9999999;
-	
-    private void sendTestMessages(int nrToSend) {
-	    for (int i = 0; i < nrToSend; i++) {
-	    	int vesselIMO = ThreadLocalRandom.current().nextInt(MIN_VESSEL_ID, MAX_VESSEL_ID + 1);
-	        String timestamp = dateFormat.format(new Date());
-		    StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
-		    PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(vesselIMO), wrapper, timestamp, TimeType.ACTUAL);
-		    portcdmApi.sendPortCallMessage(pcm);
-	    }    
-           
-        // Wait for a while to make sure the message arrives at the queue
-        try {
-			TimeUnit.SECONDS.sleep(3);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-    }
-		
+			
 }

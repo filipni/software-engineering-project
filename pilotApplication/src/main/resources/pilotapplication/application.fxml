@@ -56,7 +56,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Button layoutX="321.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="292.0" mnemonicParsing="false" onAction="#mooringRequested" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -66,7 +66,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="189.0" layoutY="292.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="189.0" layoutY="292.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -76,7 +76,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="56.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="56.0" layoutY="292.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -86,6 +86,7 @@
                   </VBox>
                </graphic>
             </Button>
+            <Label fx:id="confirmationLabel" layoutX="104.0" layoutY="234.0" text="Bekräftad" textFill="#39b54a" visible="false" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0" visible="false">
