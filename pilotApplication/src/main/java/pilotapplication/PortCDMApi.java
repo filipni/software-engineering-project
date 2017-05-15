@@ -3,6 +3,7 @@ package pilotapplication;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
 import eu.portcdm.amss.client.StateupdateApi;
@@ -45,6 +46,10 @@ public class PortCDMApi {
 	private final String MESSAGE_BROKER_PATH = "mb";
 	private final String PORT_CDM_SERVICES_PATH = "dmp";
 	private final String PORT_CDM_AMSS_PATH = "amss";
+	
+	// Other constants
+	private final int MIN_JOB_ID = 100000000; 
+	private final int MAX_JOB_ID = 999999999;
 	
 	public SubmissionService submissionService;
 	public MessageQueueServiceApi messageBrokerAPI;
@@ -229,9 +234,10 @@ public class PortCDMApi {
      * @return the newly created portcall message
      */
     public PortCallMessage portCallMessageFromStateWrapper(String vesselId, StateWrapper wrapper, String timestamp, TimeType timeType) {
+    	int jobId = ThreadLocalRandom.current().nextInt(MIN_JOB_ID, MAX_JOB_ID + 1);
     	PortCallMessage pcm = PortCallMessageBuilder.build(
-    			"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:52723", //localPortCallId
-    			"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:990198125", //localJobId
+    			"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:" + UUID.randomUUID().toString(), //localPortCallId
+    			"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:" + jobId, //localJobId
                 wrapper, //StateWrapper created above
                 timestamp, //Message's time
                 timeType, //Message's timeType

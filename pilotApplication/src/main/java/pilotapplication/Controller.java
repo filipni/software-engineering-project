@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import javafx.collections.FXCollections;
@@ -69,7 +70,7 @@ public class Controller implements Initializable {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
 		
 		createPilotageRequestQueue();
-		portCDMTest();
+		sendTestMessages(3);
 					
 	}
 	
@@ -182,22 +183,32 @@ public class Controller implements Initializable {
 		return "urn:x-mrn:stm:vessel:IMO:" + imo;
 	}
 	
+	private String createVesselIdFromIMO(int imo) {
+		return "urn:x-mrn:stm:vessel:IMO:" + imo;
+	}
+	
 	/**
-     * Simple method for testing the API to portcdm.
-     * If one of the calls to the API fails, this method
-     * will probably give you a null pointer exception.
+     * Sends a given number of pilotage requests to the backend
+     * 
+     * @param nrToSend number of messages to send
      */
-    private void portCDMTest() {
-        // Create a message
-        String timestamp = dateFormat.format(new Date());
-        StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
-        PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper("urn:x-mrn:stm:vessel:IMO:9259501", wrapper, timestamp, TimeType.ACTUAL);
-        
-        portcdmApi.sendPortCallMessage(pcm);
-        
+	
+	private final int MIN_VESSEL_ID = 1000000;
+	private final int MAX_VESSEL_ID = 9999999;
+	
+    private void sendTestMessages(int nrToSend) {
+        //List<PortCallSummary> summaries = portcdmApi.getPortCalls(5);
+	    for (int i = 0; i < nrToSend; i++) {
+	    	int vesselIMO = ThreadLocalRandom.current().nextInt(MIN_VESSEL_ID, MAX_VESSEL_ID + 1);
+	        String timestamp = dateFormat.format(new Date());
+		    StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+		    PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(vesselIMO), wrapper, timestamp, TimeType.ACTUAL);
+		    portcdmApi.sendPortCallMessage(pcm);
+	    }    
+           
         // Wait for a while to make sure the message arrives at the queue
         try {
-			TimeUnit.SECONDS.sleep(2);
+			TimeUnit.SECONDS.sleep(3);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -205,7 +216,7 @@ public class Controller implements Initializable {
         List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(requestQueueId);
         
         for (PortCallMessage msg : messages) {
-        	System.out.println(msg.getMessageId());
+        	System.out.println("Message received with id: " + msg.getMessageId() + " (PortCall: " + msg.getPortCallId() + ")");
         }
     }
 		
