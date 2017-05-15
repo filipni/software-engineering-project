@@ -47,10 +47,6 @@ public class PortCDMApi {
 	private final String PORT_CDM_SERVICES_PATH = "dmp";
 	private final String PORT_CDM_AMSS_PATH = "amss";
 	
-	// Other constants
-	private final int MIN_JOB_ID = 100000000; 
-	private final int MAX_JOB_ID = 999999999;
-	
 	public SubmissionService submissionService;
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
@@ -233,6 +229,10 @@ public class PortCDMApi {
      * @param timeType timestamp type, e.g. ACTUAL, ESTIMATE etc.
      * @return the newly created portcall message
      */
+    
+	private final int MIN_JOB_ID = 100000000; 
+	private final int MAX_JOB_ID = 999999999;
+	
     public PortCallMessage portCallMessageFromStateWrapper(String vesselId, StateWrapper wrapper, String timestamp, TimeType timeType) {
     	int jobId = ThreadLocalRandom.current().nextInt(MIN_JOB_ID, MAX_JOB_ID + 1);
     	PortCallMessage pcm = PortCallMessageBuilder.build(
