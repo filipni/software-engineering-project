@@ -140,6 +140,9 @@ public class Controller implements Initializable {
 	@FXML
 	public void handleMouseClick(MouseEvent event) {
 		String id = idListView.getSelectionModel().getSelectedItem();
+		if (id == null) { // In case we clicked on an empty cell
+			return;
+		}
 		idText.setText(id);
 		
 		vesselInfoPane.setVisible(true);
@@ -177,7 +180,14 @@ public class Controller implements Initializable {
         // Pilotage complete
         StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.COMPLETED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
         PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperService, timestamp, TimeType.ACTUAL);
-        portcdmApi.sendPortCallMessage(pcmService);      
+        portcdmApi.sendPortCallMessage(pcmService);
+        
+        // Remove call from request list
+        portCallTable.remove(imo);
+        populateIdList();
+        vesselInfoPane.setVisible(false);
+		phonePane.setVisible(false);
+        
 	}
 	
 	@FXML
