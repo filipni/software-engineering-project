@@ -20,8 +20,8 @@
                </font>
             </Text>
             <ListView fx:id="idListView" layoutX="21.0" layoutY="49.0" onMouseClicked="#handleMouseClick" prefHeight="556.0" prefWidth="180.0" />
-            <Button layoutX="56.0" layoutY="605.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" styleClass="serviceButton" text="Uppdatera" />
-            <Label layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
+            <Button layoutX="56.0" layoutY="605.0" mnemonicParsing="false" onAction="#updateRequestList" prefHeight="26.0" prefWidth="110.0" styleClass="serviceButton" text="Uppdatera" />
+            <Label fx:id="updateLabel" layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
          </children>
       </AnchorPane>
       <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="380.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css" visible="false">
