@@ -72,7 +72,9 @@ public class Controller implements Initializable {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
 		
 		createPilotageRequestQueue();
-		sendTestMessages(3);								
+		sendTestMessages(3);				
+		updatePortCallTable();
+		populateIdList();
 	}
 	
 	/**
