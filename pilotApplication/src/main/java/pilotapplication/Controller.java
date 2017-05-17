@@ -1,18 +1,22 @@
 package pilotapplication;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,13 +24,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import eu.portcdm.dto.PortCallSummary;
+import eu.portcdm.dto.LocationTimeSequence;
 import eu.portcdm.mb.dto.Filter;
 import eu.portcdm.mb.dto.FilterType;
+import eu.portcdm.messaging.LocationReferenceObject;
+import eu.portcdm.messaging.LogicalLocation;
 import eu.portcdm.messaging.PortCallMessage;
+import eu.portcdm.messaging.ServiceObject;
+import eu.portcdm.messaging.ServiceTimeSequence;
+import eu.portcdm.messaging.TimeType;
+
+import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 
 public class Controller implements Initializable {	
 	@FXML
@@ -39,6 +49,9 @@ public class Controller implements Initializable {
 	private GridPane gridPane1; 
 	
 	@FXML 
+	private Label updateLabel, confirmationLabel;
+	
+	@FXML 
 	private HBox hBoxRec1, hBoxRec2; 
 	
 	@FXML
@@ -48,32 +61,86 @@ public class Controller implements Initializable {
 	private ImageView statusImg; 
 	
 	private PortCDMApi portcdmApi;
-	private Map<String, PortCallSummary> portCallTable;
+	private SimpleDateFormat dateFormat;
+	private Map<String, PortCallInfo> portCallTable;
+	private String requestQueueId;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = true;
+		boolean useDevServer = false;
 		portcdmApi = new PortCDMApi(useDevServer);
-		portCallTable = createPortCallTable(10);
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
+		
+		createPilotageRequestQueue();
+		sendTestMessages(3);				
+		updatePortCallTable();
 		populateIdList();
-				
-		//portCDMTest();				
 	}
 	
 	/**
-	 * Creates a hashmap of portcall summaries fetched from PortCDM.
-	 * Each summary is index by its IMO. 
-	 * 
-	 * @param max maximum number of summaries to fetch
-	 * @return hashmap with the fetched portcall summaries
-	 */
-	private HashMap<String, PortCallSummary> createPortCallTable(int max) {
-		HashMap<String, PortCallSummary> map = new HashMap<>();
-		List<PortCallSummary> summaries = portcdmApi.getPortCalls(max);
-		for (PortCallSummary s : summaries) {
-			map.put(s.getVessel().getImo(), s);
+     * Sends a given number of pilotage requests to the backend
+     * 
+     * @param nrToSend number of messages to send
+     */
+	
+	private final int MIN_VESSEL_ID = 1000000;
+	private final int MAX_VESSEL_ID = 9999999;
+	
+    private void sendTestMessages(int nrToSend) {
+	    for (int i = 0; i < nrToSend; i++) {
+	    	int vesselIMO = ThreadLocalRandom.current().nextInt(MIN_VESSEL_ID, MAX_VESSEL_ID + 1);
+	        String timestamp = dateFormat.format(new Date());
+		    StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+		    PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(vesselIMO), wrapper, timestamp, TimeType.ACTUAL);
+		    portcdmApi.sendPortCallMessage(pcm);
+	    }    
+           
+        // Wait for a while to make sure the message arrives at the queue
+        try {
+			TimeUnit.SECONDS.sleep(3);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		return map;
+    }
+	
+	/**
+	 * Create a queue in portCDM for pilotage request messages
+	 */	
+	private void createPilotageRequestQueue() {
+		List<Filter> filters = new ArrayList<>();
+        Filter timeSequence = new Filter();
+
+        timeSequence.setType(FilterType.TIME_SEQUENCE);
+        timeSequence.setElement(ServiceTimeSequence.REQUESTED.toString());
+        filters.add(timeSequence);    
+        
+        requestQueueId = portcdmApi.postQueue(filters);
+	}
+	
+	/**
+	 * Update portCallTable with info from messages fetched from the pilotage request queue.
+	 * 
+	 * @return hashmap with summaries of each port call, index by vessel id
+	 */
+	private void updatePortCallTable() {
+		if (portCallTable == null) {
+			portCallTable = new HashMap<>();
+		}
+		List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(requestQueueId);
+		for (PortCallMessage pcm : messages) {
+			if (pcm.getServiceState().getServiceObject().toString() == "PILOTAGE") {
+				PortCallInfo pcInfo = new PortCallInfo(pcm.getVesselId(), pcm.getVesselId(), pcm.getServiceState().getTime().toString());
+				String imo = getImoFromVesselId(pcm.getVesselId());
+				portCallTable.put(imo, pcInfo);
+			}
+		}
+	}
+	
+	public String getImoFromVesselId(String vesselId) {
+		String[] vesselIdSplit = vesselId.split(":");
+        int idLength = vesselIdSplit.length;
+        String imo = vesselIdSplit[idLength - 1];
+        return imo;
 	}
 	
 	/**
@@ -93,13 +160,21 @@ public class Controller implements Initializable {
 	@FXML
 	public void handleMouseClick(MouseEvent event) {
 		String id = idListView.getSelectionModel().getSelectedItem();
+		if (id == null) { // In case we clicked on an empty cell
+			return;
+		}
 		idText.setText(id);
 		
 		vesselInfoPane.setVisible(true);
 		phonePane.setVisible(true);
 		
-		// Get the portcall summary corresponding to the clicked list element 
-		PortCallSummary summary = portCallTable.get(id);
+		PortCallInfo pcInfo = portCallTable.get(id);
+		if (pcInfo.getConfirmationStatus()) {
+			confirmationLabel.setVisible(true);
+		}
+		else {
+			confirmationLabel.setVisible(false);
+		}
 		
 		// Set all portcalls that do not have an IMO starting with "9" to incoming
 		if (!id.startsWith("9")) {
@@ -110,42 +185,102 @@ public class Controller implements Initializable {
 			statusImg.setImage(new Image("pilotapplication/img/Avgående.png"));
 			vesselStatusText.setText("Avgående");
 		}
-	}	
+	}
 	
-	/**
-     * Simple method for testing the API to portcdm.
-     * If one of the calls to the API fails, this method
-     * will probably give you a null pointer exception.
-     */
-    private void portCDMTest() {
-        // Create a list of filters, used when creating the queue
-        List<Filter> filters = new ArrayList<>();
-        Filter f = new Filter();
-        f.setType(FilterType.VESSEL);
-        f.setElement("urn:x-mrn:stm:vessel:IMO:9259501");
-        filters.add(f);
-        
-        String queueId = portcdmApi.postQueue(filters);
-        System.out.println("Created queue with id: " + queueId);
-        
-        // Create a message with a unique message Id
-        PortCallMessage pcm = portcdmApi.getExampleMessage();
-        pcm.setMessageId(UUID.randomUUID().toString());
-        
+	@FXML
+	public void updateRequestList(ActionEvent event) {
+		updatePortCallTable();
+		populateIdList();
+		String updateDate = dateFormat.format(new Date()).split("T")[0]; // Take just first part of date
+		updateLabel.setText("Uppdaterad: " + updateDate);
+	}
+	
+	@FXML
+	public void pilotageCommenced(ActionEvent event) {
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+        StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.COMMENCED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapper, timestamp, TimeType.ACTUAL);
         portcdmApi.sendPortCallMessage(pcm);
+	}
+	
+	@FXML
+	public void departurePilotVessel(ActionEvent event) {
+		// Departure from vessel
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+        StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.DEPARTURE_FROM, LogicalLocation.VESSEL);
+        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperLocation, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmLocation);
         
-        // Wait for a while to make sure the message arrives at the queue
-        try {
-			TimeUnit.SECONDS.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+        // Pilotage complete
+        StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.COMPLETED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperService, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmService);
         
-        List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(queueId);
-        System.out.println("Messages received: " + messages.size());
+        removeRequest(imo);  
+	}
+	
+	@FXML
+	public void pilotageDenied(ActionEvent event) {
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+		StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.DENIED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperService, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmService);
         
-        for (PortCallMessage msg : messages)
-        	System.out.println(msg.getPortCallId());
-    }
-		
+        removeRequest(imo);
+	}
+	
+	private void removeRequest(String imo) {
+		portCallTable.remove(imo);
+        populateIdList();
+        vesselInfoPane.setVisible(false);
+		phonePane.setVisible(false);
+	}
+	
+	@FXML
+	public void arrivalPilotVessel(ActionEvent event) {
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+        StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.ARRIVAL_TO, LogicalLocation.VESSEL);
+        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperLocation, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmLocation);
+	}
+	
+	@FXML
+	public void arrivalPilotBerth(ActionEvent event) {
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+        StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.ARRIVAL_TO, LogicalLocation.BERTH);
+        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperLocation, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmLocation);
+	}
+	
+	@FXML
+	public void pilotageConfirmed(ActionEvent event) {
+		String imo = idListView.getSelectionModel().getSelectedItem();
+		String timestamp = dateFormat.format(new Date());
+		StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.CONFIRMED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(imo), wrapperService, timestamp, TimeType.ACTUAL);
+        portcdmApi.sendPortCallMessage(pcmService);
+        PortCallInfo pcInfo = portCallTable.get(imo);
+        
+        pcInfo.confirmRequest();
+        confirmationLabel.setVisible(true);
+	}
+	
+	@FXML 
+	public void mooringRequested(ActionEvent event) {
+		System.out.println("Not implemented yet.");
+	}
+	
+	private String createVesselIdFromIMO(String imo) {
+		return "urn:x-mrn:stm:vessel:IMO:" + imo;
+	}
+	
+	private String createVesselIdFromIMO(int imo) {
+		return "urn:x-mrn:stm:vessel:IMO:" + imo;
+	}
+			
 }

@@ -15,6 +15,14 @@
 	-fx-background-insets: 0;
 }
 
+.serviceButton:hover {
+	-fx-effect: innershadow(gaussian, rgba(255,255,255, 0.7), 20,0,0,0 );
+}
+
+.serviceButton:pressed {
+	-fx-effect: innershadow(gaussian, rgba(0,0,0, 0.7), 20,0,0,0 );
+}
+
 .list-view {
 	-fx-background-insets: 0; /* Remove border */
 }

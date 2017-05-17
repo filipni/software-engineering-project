@@ -2,6 +2,8 @@ package pilotapplication;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
 import eu.portcdm.amss.client.StateupdateApi;
@@ -14,14 +16,17 @@ import eu.portcdm.mb.dto.Filter;
 import eu.portcdm.messaging.LocationReferenceObject;
 import eu.portcdm.messaging.LogicalLocation;
 import eu.portcdm.messaging.PortCallMessage;
+import eu.portcdm.messaging.ServiceObject;
+import eu.portcdm.messaging.ServiceTimeSequence;
 import eu.portcdm.messaging.TimeType;
+
 import se.viktoria.stm.portcdm.connector.common.SubmissionService;
 import se.viktoria.stm.portcdm.connector.common.util.PortCallMessageBuilder;
 import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 import se.viktoria.util.Configuration;
 
 public class PortCDMApi {
-	
+
 	// Parameters for the external development machine
 	private final String DEV_BASE_URL = "http://dev.portcdm.eu:8080/";
 	private final String DEV_USERNAME = "viktoria";
@@ -29,7 +34,7 @@ public class PortCDMApi {
 	private final String DEV_API_KEY = "pilot";
 	private final int DEV_TIMEOUT = 20000;
 	private  final String DEV_CONFIG_FILE_NAME = "dev_portcdm.conf";
-			
+		
 	// Parameters for the local virtual machine
 	private final String VM_BASE_URL = "http://192.168.56.101:8080/";
 	private final String VM_USERNAME = "porter";
@@ -37,17 +42,17 @@ public class PortCDMApi {
 	private final String VM_API_KEY = "pilot";	
 	private final int VM_TIMEOUT = 7000;
 	private  final String VM_CONFIG_FILE_NAME = "vm_portcdm.conf";
-	
+
 	// Paths to PortCDMs different modules
 	private final String MESSAGE_BROKER_PATH = "mb";
 	private final String PORT_CDM_SERVICES_PATH = "dmp";
 	private final String PORT_CDM_AMSS_PATH = "amss";
-		
+	
 	public SubmissionService submissionService;
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
 	public StateupdateApi AMSSApi; 
-	
+
 	/**
 	 * Constructor for the PortCDMApi object
 	 * 
@@ -67,7 +72,7 @@ public class PortCDMApi {
 			initAMSSApi(VM_BASE_URL + PORT_CDM_AMSS_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY); 
 		}	
 	}
-	
+
 	/**
 	 * Init connector (submissionService) to portCDM.
 	 * 
@@ -89,7 +94,7 @@ public class PortCDMApi {
 		submissionService = new SubmissionService();
 		submissionService.addConnectors(config);
 	}
-	
+
 	/**
 	 * Init API to portCDM message broker.
 	 */
@@ -102,7 +107,7 @@ public class PortCDMApi {
         connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
 		messageBrokerAPI = new MessageQueueServiceApi(connectorClient);
 	}
-	
+
 	/**
 	 * Init API to portCDM port call manager.
 	 */
@@ -115,7 +120,7 @@ public class PortCDMApi {
         connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
 		portCallsAPI = new PortcallsApi(connectorClient);				
 	}
-	
+
 	/**
      *  Init API to portCDM assisted message submission service (AMSS)
      */
@@ -127,7 +132,7 @@ public class PortCDMApi {
         connectorClient.addDefaultHeader("X-PortCDM-APIKey", apikey);
         AMSSApi = new StateupdateApi(connectorClient);
     }
-	
+
 	/**
 	 * Get summary of portcalls from portCDM.
 	 * 
@@ -138,14 +143,15 @@ public class PortCDMApi {
 		List<PortCallSummary> portcalls = null;
 		try {
 			portcalls = portCallsAPI.getAllPortCalls(max);
-		} catch (ApiException e) {
+			System.out.println("Fetched " + portcalls.size() + " portcalls.");
+		} 
+		catch (ApiException e) {
 			System.out.println("Couldn't fetch portcalls.");
-			System.out.println(e.getCode() + " " + e.getMessage());
-			System.out.println(e.getResponseBody());
+			System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
 		}
 		return portcalls;
 	}
-	
+
 	/**
 	 * Submit a portcall message to PortCDM. 
 	 * 
@@ -154,13 +160,17 @@ public class PortCDMApi {
 	public void sendPortCallMessage(PortCallMessage pcm) {
 		try {
             AMSSApi.sendMessage(pcm);
+            String[] vesselId = pcm.getVesselId().split(":");
+            int idLength = vesselId.length;
+            String imo = vesselId[idLength - 1];
+            System.out.println("Message successfully sent. (IMO: " + imo + ")");
         } 
         catch (eu.portcdm.amss.client.ApiException e) {
         	System.out.println("Couldn't send message.");
-        	System.out.println(e.getResponseHeaders() + " " + e.getMessage() + '\n' + e.getResponseBody());
+        	System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
         }
 	}
-	
+
 	/**
 	 * Post a queue with the given filters to portCDM.
 	 * 
@@ -171,14 +181,15 @@ public class PortCDMApi {
 		String queueId = null;
 		try {
 			queueId = messageBrokerAPI.mqsPost(filters);
+			System.out.println("Created queue with id: " + queueId);
 		} 
 		catch (eu.portcdm.mb.client.ApiException e) {
 			System.out.println("Couldn't post queue");
-			System.out.println(e.getResponseHeaders() + " " + e.getMessage() + '\n' + e.getResponseBody());
+			System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
 		}
 		return queueId;
 	}
-	
+
 	/**
 	 * Fetch all messages from the queue with the given id.
 	 * 
@@ -189,46 +200,55 @@ public class PortCDMApi {
 		List<PortCallMessage> messages = null;
 		try {
 			messages = messageBrokerAPI.mqsQueueGet(queueId);
+			System.out.println("Received " + messages.size() + " message(s) from queue " + queueId);
 		} 
 		catch (eu.portcdm.mb.client.ApiException e) {
 			System.out.println("Couldn't fetch messages.");
-			System.out.println(e.getResponseHeaders() + " " + e.getMessage() + '\n' + e.getResponseBody());
+			System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
 		} 
 		return messages;
 	}
-	
-	/**
-	 * Returns a portcall message that can be used for testing.
-	 * 
-	 * @return bogus portcall message
-	 */
-    public PortCallMessage getExampleMessage() {
-        StateWrapper stateWrapper = new StateWrapper(
-                LocationReferenceObject.VESSEL, //referenceObject
-                LocationTimeSequence.ARRIVAL_TO, //ARRIVAL_TO or DEPARTURE_FROM
-                LogicalLocation.BERTH, //Type of required location
-                53.50, //Latitude of required location
-                53.50, //Longitude of required location
-                "Skarvik Harbour 518", //Name of required location
-                LogicalLocation.ANCHORING_AREA, //Type of optional location
-                52.50, //Latitude of optional location
-                52.50, //Longitude of optional location
-                "Dana Fjord D1");//Name of optional location
-        
-        //Change dates from 2017-03-23 06:40:00 to 2017-03-23T06:40:00Z 
-        PortCallMessage portCallMessage = PortCallMessageBuilder.build(
-        		"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:52723", //localPortCallId
-        		"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:990198125", //localJobId
-                stateWrapper, //StateWrapper created above
-                "2017-03-23T06:45:00Z", //Message's time
-                TimeType.ESTIMATED, //Message's timeType
-                "urn:x-mrn:stm:vessel:IMO:9259501", //vesselId
-                "2017-03-23T06:38:51Z", //reportedAt (optional)
-                "Pilot", //reportedBy (optional)
-                "urn:mrn:stm:portcdm:message:5eadbb1c-6be7-4cf2-bd6d-f0af5a0c35dc", //groupWith (optional), messageId of the message to group with.
-                "this is a test" //comment (optional)
-        );
 
-        return portCallMessage;
+    public PortCallMessage createLocationMessage(String vesselId, LocationReferenceObject referenceObject, LocationTimeSequence sequence, LogicalLocation location, String timestamp, TimeType timeType) {
+        StateWrapper wrapper = new StateWrapper(referenceObject, sequence, location);
+        return portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, timeType);
+    }
+    
+    public PortCallMessage createServiceMessage(String vesselId, ServiceObject service, ServiceTimeSequence sequence, LogicalLocation locationTo, LogicalLocation locationFrom, String timestamp, TimeType timeType) {
+        StateWrapper wrapper = new StateWrapper(service, sequence, locationTo, locationFrom);
+        return portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, timeType);
+    }
+    
+    /**
+     * Create a portcall message from a state wrapper for a given vessel.
+     * A timestamp is required with a TimeType describing it.  
+     * After creation, the message will be given a unique identifier.
+     * 
+     * @param vesselId IMO (+prefix) of the vessel the message concerns
+     * @param wrapper StateWrapper containing information we want to send
+     * @param timestamp timestamp in the format: "yyyy-MM-dd'T'HH:mm:ss'Z'"
+     * @param timeType timestamp type, e.g. ACTUAL, ESTIMATE etc.
+     * @return the newly created portcall message
+     */
+    
+	private final int MIN_JOB_ID = 100000000; 
+	private final int MAX_JOB_ID = 999999999;
+	
+    public PortCallMessage portCallMessageFromStateWrapper(String vesselId, StateWrapper wrapper, String timestamp, TimeType timeType) {
+    	int jobId = ThreadLocalRandom.current().nextInt(MIN_JOB_ID, MAX_JOB_ID + 1);
+    	PortCallMessage pcm = PortCallMessageBuilder.build(
+    			"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:" + UUID.randomUUID().toString(), //localPortCallId
+    			"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:" + jobId, //localJobId
+                wrapper, //StateWrapper created above
+                timestamp, //Message's time
+                timeType, //Message's timeType
+                vesselId, //vesselId
+                null, //reportedAt (optional)
+                null, //reportedBy (optional)
+                null, //groupWith (optional), messageId of the message to group with.
+                null //comment (optional)
+        );
+    	pcm.setMessageId("urn:x-mrn:stm:portcdm:message:" + UUID.randomUUID().toString());
+    	return pcm;
     }
 }

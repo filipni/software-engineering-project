@@ -20,8 +20,8 @@
                </font>
             </Text>
             <ListView fx:id="idListView" layoutX="21.0" layoutY="49.0" onMouseClicked="#handleMouseClick" prefHeight="556.0" prefWidth="180.0" />
-            <Button layoutX="56.0" layoutY="605.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" styleClass="serviceButton" text="Uppdatera" />
-            <Label layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
+            <Button layoutX="56.0" layoutY="605.0" mnemonicParsing="false" onAction="#updateRequestList" prefHeight="26.0" prefWidth="110.0" styleClass="serviceButton" text="Uppdatera" />
+            <Label fx:id="updateLabel" layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
          </children>
       </AnchorPane>
       <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="380.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css" visible="false">
@@ -56,7 +56,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Button layoutX="321.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="292.0" mnemonicParsing="false" onAction="#mooringRequested" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -66,7 +66,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="189.0" layoutY="292.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="189.0" layoutY="292.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -76,7 +76,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="56.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="56.0" layoutY="292.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -86,6 +86,7 @@
                   </VBox>
                </graphic>
             </Button>
+            <Label fx:id="confirmationLabel" layoutX="104.0" layoutY="234.0" text="Bekräftad" textFill="#39b54a" visible="false" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0" visible="false">
@@ -105,7 +106,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Button layoutX="61.0" layoutY="273.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="61.0" layoutY="273.0" mnemonicParsing="false" onAction="#pilotageCommenced" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -115,7 +116,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="166.0" layoutY="273.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="166.0" layoutY="273.0" mnemonicParsing="false" onAction="#arrivalPilotVessel" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -125,7 +126,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="61.0" layoutY="330.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="61.0" layoutY="330.0" mnemonicParsing="false" onAction="#arrivalPilotBerth" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -135,7 +136,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="166.0" layoutY="330.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="166.0" layoutY="330.0" mnemonicParsing="false" onAction="#departurePilotVessel" prefHeight="42.0" prefWidth="90.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
