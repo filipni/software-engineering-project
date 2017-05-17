@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import javafx.collections.FXCollections;
@@ -67,12 +66,12 @@ public class Controller implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = false;
+		boolean useDevServer = true;
 		portcdmApi = new PortCDMApi(useDevServer);
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
 		
 		createPilotageRequestQueue();
-		sendTestMessages(3);				
+		sendTestMessage();				
 		updatePortCallTable();
 		populateIdList();
 	}
@@ -81,19 +80,13 @@ public class Controller implements Initializable {
      * Sends a given number of pilotage requests to the backend
      * 
      * @param nrToSend number of messages to send
-     */
-	
-	private final int MIN_VESSEL_ID = 1000000;
-	private final int MAX_VESSEL_ID = 9999999;
-	
-    private void sendTestMessages(int nrToSend) {
-	    for (int i = 0; i < nrToSend; i++) {
-	    	int vesselIMO = ThreadLocalRandom.current().nextInt(MIN_VESSEL_ID, MAX_VESSEL_ID + 1);
-	        String timestamp = dateFormat.format(new Date());
-		    StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
-		    PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(vesselIMO), wrapper, timestamp, TimeType.ACTUAL);
-		    portcdmApi.sendPortCallMessage(pcm);
-	    }    
+     */	
+    private void sendTestMessage() {
+	    int vesselIMO = 9440590;
+	    String timestamp = dateFormat.format(new Date());
+		StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+		PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(createVesselIdFromIMO(vesselIMO), wrapper, timestamp, TimeType.ACTUAL);
+		portcdmApi.sendPortCallMessage(pcm);   
            
         // Wait for a while to make sure the message arrives at the queue
         try {

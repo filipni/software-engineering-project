@@ -3,7 +3,6 @@ package pilotapplication;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
 import eu.portcdm.amss.client.StateupdateApi;
@@ -28,7 +27,7 @@ import se.viktoria.util.Configuration;
 public class PortCDMApi {
 
 	// Parameters for the external development machine
-	private final String DEV_BASE_URL = "http://dev.portcdm.eu:8080/";
+	private final String DEV_BASE_URL = "http://sandbox-5.portcdm.eu:8080/";
 	private final String DEV_USERNAME = "viktoria";
 	private final String DEV_PASSWORD = "vik123"; 
 	private final String DEV_API_KEY = "pilot";
@@ -63,7 +62,7 @@ public class PortCDMApi {
 			initSubmissionService(DEV_CONFIG_FILE_NAME, null);
 			initMessageBrokerAPI(DEV_BASE_URL + MESSAGE_BROKER_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 			initPortCallsAPI(DEV_BASE_URL + PORT_CDM_SERVICES_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
-			initAMSSApi(DEV_BASE_URL + PORT_CDM_SERVICES_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
+			initAMSSApi(DEV_BASE_URL + PORT_CDM_AMSS_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 		}
 		else {
 			initSubmissionService(VM_CONFIG_FILE_NAME, null);
@@ -229,16 +228,11 @@ public class PortCDMApi {
      * @param timestamp timestamp in the format: "yyyy-MM-dd'T'HH:mm:ss'Z'"
      * @param timeType timestamp type, e.g. ACTUAL, ESTIMATE etc.
      * @return the newly created portcall message
-     */
-    
-	private final int MIN_JOB_ID = 100000000; 
-	private final int MAX_JOB_ID = 999999999;
-	
+     */	
     public PortCallMessage portCallMessageFromStateWrapper(String vesselId, StateWrapper wrapper, String timestamp, TimeType timeType) {
-    	int jobId = ThreadLocalRandom.current().nextInt(MIN_JOB_ID, MAX_JOB_ID + 1);
     	PortCallMessage pcm = PortCallMessageBuilder.build(
-    			"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:" + UUID.randomUUID().toString(), //localPortCallId
-    			"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:" + jobId, //localJobId
+    			null, //localPortCallId
+    			null, //localJobId
                 wrapper, //StateWrapper created above
                 timestamp, //Message's time
                 timeType, //Message's timeType
