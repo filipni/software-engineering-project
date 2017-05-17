@@ -5,9 +5,10 @@ public class PortCallInfo {
 	private final String vesselId;
 	private final String portCallId;
 	private String ETA;
+	private String boatName;
 	private boolean confirmed;
 	
-	public PortCallInfo(String vesselId, String portCallId, String ETA) {
+	public PortCallInfo(String vesselId, String portCallId, String ETA, String boatName) {
 		this.vesselId = vesselId;
 		this.portCallId = portCallId;
 		this.ETA = ETA;
@@ -36,6 +37,10 @@ public class PortCallInfo {
 	
 	public void confirmRequest() {
 		confirmed = true;
+	}
+	
+	public String getName() {
+		return boatName;
 	}
 	
 }

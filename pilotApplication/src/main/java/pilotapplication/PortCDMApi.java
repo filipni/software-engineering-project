@@ -9,6 +9,7 @@ import eu.portcdm.amss.client.StateupdateApi;
 import eu.portcdm.client.ApiException;
 import eu.portcdm.client.service.PortcallsApi;
 import eu.portcdm.dto.LocationTimeSequence;
+import eu.portcdm.dto.PortCall;
 import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.mb.client.MessageQueueServiceApi;
 import eu.portcdm.mb.dto.Filter;
@@ -149,6 +150,20 @@ public class PortCDMApi {
 			System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
 		}
 		return portcalls;
+	}
+	
+	/**
+	 * 
+	 */
+	public PortCall getPortCall(String portCallId) {
+		PortCall portcall = null;
+		try {
+			portcall = portCallsAPI.getPortCall(portCallId);
+		} catch (ApiException e) {
+			System.out.println("Couldn't fetch portcall.");
+			System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
+		}
+		return portcall;
 	}
 
 	/**
