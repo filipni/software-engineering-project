@@ -221,6 +221,11 @@ public class Controller implements Initializable {
         removeRequest(boatName);
 	}
 	
+	/**
+	 * Remove a vessel from the request list and update the GUI accordingly.
+	 * 
+	 * @param boatName name of the boat to remove
+	 */
 	private void removeRequest(String boatName) {
 		portCallTable.remove(boatName);
         populateIdList();

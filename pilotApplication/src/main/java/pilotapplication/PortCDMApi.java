@@ -153,7 +153,10 @@ public class PortCDMApi {
 	}
 	
 	/**
+	 * Fetch a specific portcall identified by a portcall id.
 	 * 
+	 * @param portCallId
+	 * @return portcall fetched from portCDM
 	 */
 	public PortCall getPortCall(String portCallId) {
 		PortCall portcall = null;
