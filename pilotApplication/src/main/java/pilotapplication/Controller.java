@@ -42,13 +42,13 @@ public class Controller implements Initializable {
 	private ListView<String> idListView; 
 	
 	@FXML
-	private Text idText, vesselStatusText, bookTimeText, etaTimeText;
+	private Text idText, vesselStatusText;
 	
 	@FXML 
 	private GridPane gridPane1; 
 	
 	@FXML 
-	private Label updateLabel, confirmationLabel;
+	private Label updateLabel, confirmationLabel, departureLocationLabel, arrivalLocationLabel, etaTimeLabel, bookTimeLabel;
 	
 	@FXML 
 	private HBox hBoxRec1, hBoxRec2; 
@@ -268,8 +268,13 @@ public class Controller implements Initializable {
 	}
 	
 	@FXML 
-	public void mooringRequested(ActionEvent event) {
+	public void mooringRequestedOutgoing(ActionEvent event) {
 		System.out.println("Not implemented yet.");
 	}		
 			
+	@FXML 
+	public void mooringRequestedIncoming(ActionEvent event) {
+		System.out.println("Not implemented yet.");
+	}		
+
 }
