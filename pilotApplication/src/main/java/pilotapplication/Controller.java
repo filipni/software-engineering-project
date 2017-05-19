@@ -300,12 +300,36 @@ public class Controller implements Initializable {
 	
 	@FXML 
 	public void mooringRequestedOutgoing(ActionEvent event) {
-		System.out.println("Not implemented yet.");
+		/*
+		String boatName = idListView.getSelectionModel().getSelectedItem();
+		String vesselId = portCallTable.get(boatName).getVesselId();
+		String timestamp = dateFormat.format(new Date());
+		StateWrapper wrapperService = new StateWrapper(ServiceObject.DEPARTURE_MOORING_OPERATION, ServiceTimeSequence.REQUESTED, LogicalLocation.BERTH);
+		PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, timestamp, TimeType.ESTIMATED);
+		portcdmApi.sendPortCallMessage(pcmService);
+		
+		PortCallInfo pcInfo = portCallTable.get(boatName);
+		pcInfo.confirmRequest();
+		//Set appropriate label here
+		*/
+		System.out.println("Not implemented yet");
 	}		
 			
 	@FXML 
 	public void mooringRequestedIncoming(ActionEvent event) {
-		System.out.println("Not implemented yet.");
+		/*
+		String boatName = idListView.getSelectionModel().getSelectedItem();
+		String vesselId = portCallTable.get(boatName).getVesselId();
+		String timestamp = dateFormat.format(new Date());
+		StateWrapper wrapperService = new StateWrapper(ServiceObject.ARRIVAL_MOORING_OPERATION, ServiceTimeSequence.REQUESTED, LogicalLocation.BERTH);
+		PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, timestamp, TimeType.ESTIMATED);
+		portcdmApi.sendPortCallMessage(pcmService);
+		
+		PortCallInfo pcInfo = portCallTable.get(boatName);
+		pcInfo.confirmRequest();
+		//Set appropriate label here
+		*/
+		System.out.println("Not implemented yet");
 	}		
 
 }
