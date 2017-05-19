@@ -24,7 +24,7 @@
             <Label fx:id="updateLabel" layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
          </children>
       </AnchorPane>
-      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="451.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css" visible="false">
+      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="451.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css">
          <children>
             <Text fx:id="idText" fill="#000000cc" layoutX="13.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.7294921875">
                <font>
@@ -66,7 +66,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Label fx:id="confirmationLabel" layoutX="104.0" layoutY="234.0" text="Bekräftad" textFill="#39b54a" visible="false" />
+            <Label fx:id="confirmationLabel" layoutX="92.0" layoutY="360.0" text="Bekräftad" textFill="#39b54a" visible="false" />
             <Label fx:id="arrivalLocationLabel" alignment="CENTER" layoutX="279.0" layoutY="213.0" prefHeight="25.0" prefWidth="156.0" text="Kaj" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
                <font>
                   <Font size="20.0" />
@@ -97,14 +97,14 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="etaTimeLabel" alignment="CENTER" layoutX="279.0" layoutY="311.0" prefHeight="25.0" prefWidth="156.0" text="17:25 23-april">
+            <Label fx:id="etaTimeLabel" alignment="CENTER" layoutX="257.0" layoutY="311.0" prefHeight="50.0" prefWidth="200.0" text="17:25 23-april">
                <font>
-                  <Font size="20.0" />
+                  <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="bookTimeLabel" alignment="CENTER" layoutX="58.0" layoutY="311.0" prefHeight="25.0" prefWidth="156.0" text="17:25 23-april">
+            <Label fx:id="bookTimeLabel" alignment="CENTER" layoutX="36.0" layoutY="311.0" prefHeight="50.0" prefWidth="200.0" text="17:25 23-april">
                <font>
-                  <Font size="20.0" />
+                  <Font size="16.0" />
                </font>
             </Label>
          </children>
