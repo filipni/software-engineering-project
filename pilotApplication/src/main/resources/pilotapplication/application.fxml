@@ -24,7 +24,7 @@
             <Label fx:id="updateLabel" layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
          </children>
       </AnchorPane>
-      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="451.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css">
+      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="517.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css">
          <children>
             <Text fx:id="idText" fill="#000000cc" layoutX="13.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.7294921875">
                <font>
@@ -36,7 +36,7 @@
                <font>
                   <Font size="18.0" />
                </font></Text>
-            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css" AnchorPane.bottomAnchor="29.0">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -46,7 +46,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="189.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="189.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css" AnchorPane.bottomAnchor="29.0">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -56,7 +56,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="56.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="56.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css" AnchorPane.bottomAnchor="29.0">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>

@@ -124,7 +124,7 @@ public class Controller implements Initializable {
 		for (PortCallMessage pcm : messages) {
 			if (pcm.getServiceState().getServiceObject().toString() == "PILOTAGE") {
 				String boatName = portcdmApi.getPortCall(pcm.getPortCallId()).getVessel().getName();
-				PortCallInfo pcInfo = new PortCallInfo(pcm.getVesselId(), pcm.getVesselId(), pcm.getServiceState().getTime().toString(), boatName);
+				PortCallInfo pcInfo = new PortCallInfo(pcm.getVesselId(), pcm.getVesselId(), pcm.getServiceState().getTime().toString(), pcm.getServiceState().getTimeType().toString(),  boatName);
 				portCallTable.put(boatName, pcInfo);
 			}
 		}
@@ -255,7 +255,7 @@ public class Controller implements Initializable {
 	public void arrivalPilotVesselEstimated(ActionEvent event) {
 		String boatName = idListView.getSelectionModel().getSelectedItem();
 		String vesselId = portCallTable.get(boatName).getVesselId();
-		String timestamp = dateFormat.format(new Date());
+		String timestamp = dateFormat.format(new Date("00:00:00"));
         StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.ARRIVAL_TO, LogicalLocation.VESSEL);
         PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, timestamp, TimeType.ESTIMATED);
         portcdmApi.sendPortCallMessage(pcmLocation);

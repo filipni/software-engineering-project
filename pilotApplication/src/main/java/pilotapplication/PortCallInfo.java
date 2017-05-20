@@ -5,13 +5,15 @@ public class PortCallInfo {
 	private final String vesselId;
 	private final String portCallId;
 	private String ETA;
+	private String timeType;
 	private String boatName;
 	private boolean confirmed;
 	
-	public PortCallInfo(String vesselId, String portCallId, String ETA, String boatName) {
+	public PortCallInfo(String vesselId, String portCallId, String ETA, String timeType, String boatName) {
 		this.vesselId = vesselId;
 		this.portCallId = portCallId;
 		this.ETA = ETA;
+		this.timeType = timeType;
 		confirmed = false;
 	}
 	
