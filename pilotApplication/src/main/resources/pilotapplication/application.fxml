@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -110,9 +111,59 @@
                   <Font size="16.0" />
                </font>
             </Label>
+            <TextField fx:id="hourETA" alignment="CENTER" layoutX="130.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="hh">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="minuteETA" alignment="CENTER" layoutX="153.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="mm">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <Label layoutX="152.0" layoutY="449.0" text=":">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <Button layoutX="189.0" layoutY="435.0" mnemonicParsing="false" onAction="#pilotageCommencedEstimated" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Påbörja" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="lotsning" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button layoutX="321.0" layoutY="436.0" mnemonicParsing="false" onAction="#departurePilotVesselEstimated" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Lots" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="avhämtad" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <TextField fx:id="monthETA" alignment="CENTER" layoutX="79.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="MM">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="yearETA" alignment="CENTER" layoutX="102.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="YY">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="dayETA" alignment="CENTER" layoutX="56.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="DD">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0" visible="false">
+      <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0">
          <children>
             <ImageView fitHeight="499.0" fitWidth="411.0" pickOnBounds="true" preserveRatio="true">
                <image>

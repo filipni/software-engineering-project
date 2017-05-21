@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -43,6 +44,9 @@ public class Controller implements Initializable {
 	
 	@FXML
 	private Text idText, vesselStatusText;
+	
+	@FXML
+	private TextField hourETA, minuteETA, dayETA, monthETA, yearETA;
 	
 	@FXML 
 	private GridPane gridPane1; 
@@ -90,6 +94,10 @@ public class Controller implements Initializable {
 		locationMap.put(LogicalLocation.TUG_ZONE, "Bärgningszon");
 		locationMap.put(LogicalLocation.VESSEL, "Skepp");
 		return locationMap;
+	}
+	
+	public String getInputETA() {
+		return "20" + yearETA.getText() + "-" + monthETA.getText() +  "-" + dayETA.getText() + "T" + hourETA.getText() + ":" + minuteETA.getText() + ":00Z";
 	}
 	
 	/**
@@ -217,6 +225,15 @@ public class Controller implements Initializable {
 	}
 	
 	@FXML
+	public void pilotageCommencedEstimated(ActionEvent event) {
+		String boatName = idListView.getSelectionModel().getSelectedItem();
+		String vesselId = portCallTable.get(boatName).getVesselId();
+        StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.COMMENCED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, getInputETA(), TimeType.ESTIMATED);
+        portcdmApi.sendPortCallMessage(pcm);
+	}
+	
+	@FXML
 	public void departurePilotVessel(ActionEvent event) {
 		// Departure from vessel
 		String boatName = idListView.getSelectionModel().getSelectedItem();
@@ -232,6 +249,22 @@ public class Controller implements Initializable {
         portcdmApi.sendPortCallMessage(pcmService);
         
         removeRequest(boatName);  
+	}
+	
+	@FXML
+	public void departurePilotVesselEstimated(ActionEvent event) {
+		// Departure from vessel
+		String boatName = idListView.getSelectionModel().getSelectedItem();
+		String vesselId = portCallTable.get(boatName).getVesselId();
+        StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.DEPARTURE_FROM, LogicalLocation.VESSEL);
+        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, getInputETA(), TimeType.ESTIMATED);
+        portcdmApi.sendPortCallMessage(pcmLocation);
+        
+        // Pilotage complete
+        StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.COMPLETED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, getInputETA(), TimeType.ESTIMATED);
+        portcdmApi.sendPortCallMessage(pcmService);
+        
 	}
 	
 	@FXML
@@ -272,9 +305,8 @@ public class Controller implements Initializable {
 	public void arrivalPilotVesselEstimated(ActionEvent event) {
 		String boatName = idListView.getSelectionModel().getSelectedItem();
 		String vesselId = portCallTable.get(boatName).getVesselId();
-		String timestamp = dateFormat.format(new Date());
         StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.ARRIVAL_TO, LogicalLocation.VESSEL);
-        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, timestamp, TimeType.ESTIMATED);
+        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, getInputETA(), TimeType.ESTIMATED);
         portcdmApi.sendPortCallMessage(pcmLocation);
 	}
 	
@@ -292,9 +324,8 @@ public class Controller implements Initializable {
 	public void arrivalPilotBerthEstimated(ActionEvent event) {
 		String boatName = idListView.getSelectionModel().getSelectedItem();
 		String vesselId = portCallTable.get(boatName).getVesselId();
-		String timestamp = dateFormat.format(new Date());
         StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.ARRIVAL_TO, LogicalLocation.BERTH);
-        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, timestamp, TimeType.ESTIMATED);
+        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, getInputETA(), TimeType.ESTIMATED);
         portcdmApi.sendPortCallMessage(pcmLocation);
 	}
 	
@@ -326,7 +357,7 @@ public class Controller implements Initializable {
 		portcdmApi.sendPortCallMessage(pcmService);
 		
 		PortCallInfo pcInfo = portCallTable.get(boatName);
-		pcInfo.confirmRequest();
+		pcInfo.confirmRequest(); //should this be called?
 		//Set appropriate label here
 		*/
 		System.out.println("Not implemented yet");
@@ -343,7 +374,7 @@ public class Controller implements Initializable {
 		portcdmApi.sendPortCallMessage(pcmService);
 		
 		PortCallInfo pcInfo = portCallTable.get(boatName);
-		pcInfo.confirmRequest();
+		pcInfo.confirmRequest(); //should this be called?
 		//Set appropriate label here
 		*/
 		System.out.println("Not implemented yet");
