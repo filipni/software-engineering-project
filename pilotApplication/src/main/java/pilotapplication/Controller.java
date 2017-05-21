@@ -62,6 +62,7 @@ public class Controller implements Initializable {
 	private PortCDMApi portcdmApi;
 	private SimpleDateFormat dateFormat;
 	private Map<String, PortCallInfo> portCallTable;
+	private Map<LogicalLocation, String> locationMap;
 	private String requestQueueId;
 	
 	@Override
@@ -70,11 +71,25 @@ public class Controller implements Initializable {
 		portcdmApi = new PortCDMApi(useDevServer);
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
 		vesselInfoPane.setVisible(false);
+		createLocationMap();
 		
 		createPilotageRequestQueue();
 		sendTestMessage();
-		updatePortCallTable();
-		populateIdList();
+		updateRequestList(null);
+	}
+	
+	private Map<LogicalLocation, String> createLocationMap() {
+		locationMap = new HashMap<>();
+		locationMap.put(LogicalLocation.ANCHORING_AREA, "Ankarplats");
+		locationMap.put(LogicalLocation.BERTH, "Kaj");
+		locationMap.put(LogicalLocation.ETUG_ZONE, "-");
+		locationMap.put(LogicalLocation.LOC, "-");
+		locationMap.put(LogicalLocation.PILOT_BOARDING_AREA, "Lotsombordstigning");
+		locationMap.put(LogicalLocation.RENDEZV_AREA, "Träffpunkt");
+		locationMap.put(LogicalLocation.TRAFFIC_AREA, "Trafikområde");
+		locationMap.put(LogicalLocation.TUG_ZONE, "Bärgningszon");
+		locationMap.put(LogicalLocation.VESSEL, "Skepp");
+		return locationMap;
 	}
 	
 	/**
@@ -87,6 +102,8 @@ public class Controller implements Initializable {
 	    String timestamp = dateFormat.format(new Date());
 		StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
 		PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, TimeType.ACTUAL);
+		System.out.println("TEST \n");
+		System.out.println( );
 		portcdmApi.sendPortCallMessage(pcm);   
            
         // Wait for a while to make sure the message arrives at the queue
@@ -124,7 +141,9 @@ public class Controller implements Initializable {
 		for (PortCallMessage pcm : messages) {
 			if (pcm.getServiceState().getServiceObject().toString() == "PILOTAGE") {
 				String boatName = portcdmApi.getPortCall(pcm.getPortCallId()).getVessel().getName();
-				PortCallInfo pcInfo = new PortCallInfo(pcm.getVesselId(), pcm.getVesselId(), pcm.getServiceState().getTime().toString(), pcm.getServiceState().getTimeType().toString(),  boatName);
+				String toLocation = locationMap.get(pcm.getServiceState().getBetween().getTo().getLocationType());
+				String fromLocation = locationMap.get(pcm.getServiceState().getBetween().getFrom().getLocationType());
+				PortCallInfo pcInfo = new PortCallInfo(pcm.getVesselId(), pcm.getVesselId(), pcm.getServiceState().getTime().toString(), pcm.getServiceState().getTimeType().toString(), boatName, fromLocation, toLocation );
 				portCallTable.put(boatName, pcInfo);
 			}
 		}
@@ -176,9 +195,9 @@ public class Controller implements Initializable {
 			statusImg.setImage(new Image("pilotapplication/img/Avgående.png"));
 			vesselStatusText.setText("Avgående");
 		}
-
-
 		etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-8))); 
+		departureLocationLabel.setText(pcInfo.getFromLocation());
+		arrivalLocationLabel.setText(pcInfo.getToLocation());
 	}
 	
 	@FXML
