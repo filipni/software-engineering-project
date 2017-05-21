@@ -102,8 +102,6 @@ public class Controller implements Initializable {
 	    String timestamp = dateFormat.format(new Date());
 		StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
 		PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, TimeType.ACTUAL);
-		System.out.println("TEST \n");
-		System.out.println( );
 		portcdmApi.sendPortCallMessage(pcm);   
            
         // Wait for a while to make sure the message arrives at the queue
@@ -274,7 +272,7 @@ public class Controller implements Initializable {
 	public void arrivalPilotVesselEstimated(ActionEvent event) {
 		String boatName = idListView.getSelectionModel().getSelectedItem();
 		String vesselId = portCallTable.get(boatName).getVesselId();
-		String timestamp = dateFormat.format(new Date("00:00:00"));
+		String timestamp = dateFormat.format(new Date());
         StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.ARRIVAL_TO, LogicalLocation.VESSEL);
         PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, timestamp, TimeType.ESTIMATED);
         portcdmApi.sendPortCallMessage(pcmLocation);

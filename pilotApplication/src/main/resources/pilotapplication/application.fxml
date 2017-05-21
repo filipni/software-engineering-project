@@ -36,7 +36,7 @@
                <font>
                   <Font size="18.0" />
                </font></Text>
-            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css" AnchorPane.bottomAnchor="29.0">
+            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -46,7 +46,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="189.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css" AnchorPane.bottomAnchor="29.0">
+            <Button layoutX="189.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -56,7 +56,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="56.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css" AnchorPane.bottomAnchor="29.0">
+            <Button layoutX="56.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -66,43 +66,46 @@
                   </VBox>
                </graphic>
             </Button>
-            <Label fx:id="confirmationLabel" layoutX="92.0" layoutY="360.0" text="Bekräftad" textFill="#39b54a" visible="false" />
-            <Label fx:id="arrivalLocationLabel" alignment="CENTER" layoutX="279.0" layoutY="213.0" prefHeight="25.0" prefWidth="156.0" text="Kaj" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
+            <Label fx:id="confirmationLabel" layoutX="58.0" layoutY="360.0" text="Bekräftad" textFill="#39b54a" visible="false">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Label>
+            <Label fx:id="arrivalLocationLabel" alignment="TOP_LEFT" layoutX="279.0" layoutY="213.0" prefHeight="25.0" prefWidth="156.0" text="Kaj" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="279.0" layoutY="180.0" prefHeight="25.0" prefWidth="156.0" text="Till" textFill="#3c8dc2" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
+            <Label alignment="TOP_LEFT" layoutX="279.0" layoutY="180.0" prefHeight="25.0" prefWidth="156.0" text="Till" textFill="#3c8dc2" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="58.0" layoutY="180.0" prefHeight="25.0" prefWidth="156.0" text="Från" textFill="#3c8dc2" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="285.0">
+            <Label alignment="TOP_LEFT" layoutX="58.0" layoutY="180.0" prefHeight="25.0" prefWidth="156.0" text="Från" textFill="#3c8dc2" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="285.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="279.0" layoutY="281.0" prefHeight="25.0" prefWidth="156.0" text="ETA" textFill="#3c8dc2">
+            <Label alignment="TOP_LEFT" layoutX="279.0" layoutY="281.0" prefHeight="25.0" prefWidth="156.0" text="ETA" textFill="#3c8dc2">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="departureLocationLabel" alignment="CENTER" layoutX="58.0" layoutY="213.0" prefHeight="25.0" text="Lotsplats" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="285.0">
+            <Label fx:id="departureLocationLabel" alignment="TOP_LEFT" layoutX="58.0" layoutY="213.0" prefHeight="25.0" text="Lotsplats" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="285.0">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="58.0" layoutY="281.0" prefHeight="25.0" prefWidth="156.0" text="Lots bokad" textFill="#3c8dc2">
+            <Label alignment="TOP_LEFT" layoutX="58.0" layoutY="281.0" prefHeight="25.0" prefWidth="156.0" text="Lots bokad" textFill="#3c8dc2">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="etaTimeLabel" alignment="CENTER" layoutX="257.0" layoutY="311.0" prefHeight="50.0" prefWidth="200.0" text="17:25 23-april">
+            <Label fx:id="etaTimeLabel" alignment="TOP_LEFT" layoutX="279.0" layoutY="311.0" prefHeight="50.0" prefWidth="180.0" text="17:25 23-april">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="bookTimeLabel" alignment="CENTER" layoutX="36.0" layoutY="311.0" prefHeight="50.0" prefWidth="200.0" text="17:25 23-april">
+            <Label fx:id="bookTimeLabel" alignment="TOP_LEFT" layoutX="58.0" layoutY="311.0" prefHeight="50.0" prefWidth="180.0" text="17:25 23-april">
                <font>
                   <Font size="16.0" />
                </font>
