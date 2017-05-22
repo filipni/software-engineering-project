@@ -261,7 +261,7 @@ public class PortCDMApi {
 		    	}
 		    	
 		    	Node portCallNode = getElement("portCallId", messageElems);
-		    	Node vesselNode = getElement("vesselId", messageElems); // Not all groups includes a vesselId, which is problematic  	
+		    	Node vesselNode = getElement("vesselId", messageElems); // Not all groups include a vesselId, which is problematic  	
 		    	Node msgIdNode = getElement("messageId", messageElems);
 		    	
 		    	// We must make sure that no field that we require is missing
