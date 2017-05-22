@@ -75,7 +75,10 @@ public class Controller implements Initializable {
 		useDevServer = true;
 		portcdmApi = new PortCDMApi(useDevServer);
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
+		
 		vesselInfoPane.setVisible(false);
+		phonePane.setVisible(false);
+		
 		createLocationMap();
 		
 		createPilotageRequestQueue();
