@@ -207,13 +207,17 @@ public class PortCDMApi {
 		}
 		return queueId;
 	}
+	
 	/**
-	 * Fet all messages from the queue with the given id.
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
-	 * @throws SAXException 
+	 * Let me present to you, *drumroll*, the ugliest code in the world! 
+	 * 
+	 * Fetch all messages from the queue with the given id.
+	 * This method should only be used when communicating with the development server.
+	 * 
+	 * @param queueId id of the queue of interest
+	 * @return all messages fetched from the queue
 	 */
-	public List<PortCallMessage> fetchMessagesDevQueue(String queueId) {
+	public List<PortCallMessage> fetchMessagesFromDevQueue(String queueId) {
 		
 		List<PortCallMessage> requestList = new LinkedList<>();
 		NodeList messages = null;
@@ -308,7 +312,6 @@ public class PortCDMApi {
 		System.out.println("Received " + messages.getLength() + " message(s) from queue " + queueId);
 		return requestList;
 	}
-
 	
 	private Node getElement(String elementName, NodeList elements) {
 		for (int i = 0; i < elements.getLength(); i++) {

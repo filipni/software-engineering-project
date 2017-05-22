@@ -147,7 +147,7 @@ public class Controller implements Initializable {
 		
 		List<PortCallMessage> messages;
 		if (useDevServer) {
-			messages = portcdmApi.fetchMessagesDevQueue(requestQueueId);
+			messages = portcdmApi.fetchMessagesFromDevQueue(requestQueueId);
 		}
 		else {
 			messages = portcdmApi.fetchMessagesFromQueue(requestQueueId);
