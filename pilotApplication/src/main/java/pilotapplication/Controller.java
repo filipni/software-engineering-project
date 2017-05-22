@@ -68,10 +68,11 @@ public class Controller implements Initializable {
 	private Map<String, PortCallInfo> portCallTable;
 	private Map<LogicalLocation, String> locationMap;
 	private String requestQueueId;
+	private boolean useDevServer;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
-		boolean useDevServer = false;
+		useDevServer = true;
 		portcdmApi = new PortCDMApi(useDevServer);
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Used to generate timestamps
 		vesselInfoPane.setVisible(false);
@@ -106,7 +107,7 @@ public class Controller implements Initializable {
      * @param nrToSend number of messages to send
      */	
     private void sendTestMessage() {
-	    String vesselId = "urn:x-mrn:stm:vessel:IMO:9440590";
+	    String vesselId = "urn:mrn:stm:vessel:IMO:9501368";
 	    String timestamp = dateFormat.format(new Date());
 		StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
 		PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, TimeType.ACTUAL);
@@ -143,7 +144,15 @@ public class Controller implements Initializable {
 		if (portCallTable == null) {
 			portCallTable = new HashMap<>();
 		}
-		List<PortCallMessage> messages = portcdmApi.fetchMessagesFromQueue(requestQueueId);
+		
+		List<PortCallMessage> messages;
+		if (useDevServer) {
+			messages = portcdmApi.fetchMessagesDevQueue(requestQueueId);
+		}
+		else {
+			messages = portcdmApi.fetchMessagesFromQueue(requestQueueId);
+		}
+		
 		for (PortCallMessage pcm : messages) {
 			if (pcm.getServiceState().getServiceObject().toString() == "PILOTAGE") {
 				String boatName = portcdmApi.getPortCall(pcm.getPortCallId()).getVessel().getName();

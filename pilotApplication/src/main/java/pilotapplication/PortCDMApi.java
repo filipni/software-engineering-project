@@ -1,9 +1,28 @@
 package pilotapplication;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.log4j.spi.LocationInfo;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import eu.portcdm.amss.client.StateupdateApi;
 import eu.portcdm.client.ApiException;
@@ -33,7 +52,6 @@ public class PortCDMApi {
 	private final String DEV_PASSWORD = "vik123"; 
 	private final String DEV_API_KEY = "pilot";
 	private final int DEV_TIMEOUT = 20000;
-	private  final String DEV_CONFIG_FILE_NAME = "dev_portcdm.conf";
 		
 	// Parameters for the local virtual machine
 	private final String VM_BASE_URL = "http://192.168.56.101:8080/";
@@ -41,7 +59,6 @@ public class PortCDMApi {
 	private final String VM_PASSWORD = "porter"; // LOL security
 	private final String VM_API_KEY = "pilot";	
 	private final int VM_TIMEOUT = 7000;
-	private  final String VM_CONFIG_FILE_NAME = "vm_portcdm.conf";
 
 	// Paths to PortCDMs different modules
 	private final String MESSAGE_BROKER_PATH = "mb";
@@ -52,6 +69,18 @@ public class PortCDMApi {
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
 	public StateupdateApi AMSSApi; 
+		
+	private final List<String> locationList = Arrays.asList(
+			LogicalLocation.ANCHORING_AREA.toString(), 
+			LogicalLocation.BERTH.toString(), 
+			LogicalLocation.ETUG_ZONE.toString(), 
+			LogicalLocation.TUG_ZONE.toString(),
+			LogicalLocation.LOC.toString(), 
+			LogicalLocation.PILOT_BOARDING_AREA.toString(), 
+			LogicalLocation.RENDEZV_AREA.toString(), 
+			LogicalLocation.TRAFFIC_AREA.toString(), 
+			LogicalLocation.TUG_ZONE.toString(), 
+			LogicalLocation.VESSEL.toString());
 
 	/**
 	 * Constructor for the PortCDMApi object
@@ -60,39 +89,15 @@ public class PortCDMApi {
 	 */
 	public PortCDMApi(boolean connectToExternalServer) {
 		if (connectToExternalServer) {
-			initSubmissionService(DEV_CONFIG_FILE_NAME, null);
 			initMessageBrokerAPI(DEV_BASE_URL + MESSAGE_BROKER_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 			initPortCallsAPI(DEV_BASE_URL + PORT_CDM_SERVICES_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 			initAMSSApi(DEV_BASE_URL + PORT_CDM_AMSS_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 		}
 		else {
-			initSubmissionService(VM_CONFIG_FILE_NAME, null);
 			initMessageBrokerAPI(VM_BASE_URL + MESSAGE_BROKER_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
 			initPortCallsAPI(VM_BASE_URL + PORT_CDM_SERVICES_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
 			initAMSSApi(VM_BASE_URL + PORT_CDM_AMSS_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY); 
 		}	
-	}
-
-	/**
-	 * Init connector (submissionService) to portCDM.
-	 * 
-	 * @param configFileName	filename for application configuration	
-	 * @param configFileDir		leaf directory for application configuration
-	 */
-	private void initSubmissionService(String configFileName, String configFileDir) {
-		Configuration config = new Configuration(
-				configFileName, 
-				configFileDir,
-				new Predicate<Map.Entry<Object, Object>>() {
-					@Override
-					public boolean test(Map.Entry<Object, Object> objectObjectEntry) {
-						return !objectObjectEntry.getKey().toString().equals("pass");
-				}	
-		});
-		config.reload();		
-		
-		submissionService = new SubmissionService();
-		submissionService.addConnectors(config);
 	}
 
 	/**
@@ -206,6 +211,121 @@ public class PortCDMApi {
 		}
 		return queueId;
 	}
+	/**
+	 * Fet all messages from the queue with the given id.
+	 * @throws IOException 
+	 * @throws ParserConfigurationException 
+	 * @throws SAXException 
+	 */
+	public List<PortCallMessage> fetchMessagesDevQueue(String queueId) {
+		
+		List<PortCallMessage> requestList = new LinkedList<>();
+		NodeList messages = null;
+		try {
+			URL url = new URL(DEV_BASE_URL + "mb/mqs/" + queueId);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Accept", "application/xml");
+			conn.setRequestProperty("X-PortCDM-UserId", DEV_USERNAME);
+			conn.setRequestProperty("X-PortCDM-Password", DEV_PASSWORD);
+			conn.setRequestProperty("X-PortCDM-APIKey", DEV_API_KEY);
+	
+			if (conn.getResponseCode() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode() + " " + conn.getResponseMessage());
+			}
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+				(conn.getInputStream())));
+			
+			String xml = br.readLine();
+			conn.getInputStream().close(); // Necessary?
+			
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    InputSource is = new InputSource(new StringReader(xml));
+		    Document doc = builder.parse(is);
+		        
+		    messages = doc.getFirstChild().getChildNodes();
+		    for (int i = 0; i < messages.getLength(); i++) {
+		    	NodeList messageElems = messages.item(i).getChildNodes();
+		    	
+		    	Node vessel = getElement("vesselId", messageElems);
+		    	String vesselId = vessel.getTextContent();
+		    	
+		    	Node msgId = getElement("messageId", messageElems);
+		    	String messageId = msgId.getTextContent();
+		    	
+		    	Node portCall = getElement("portCallId", messageElems);
+		    	String portCallId = portCall.getTextContent();
+		    	
+		    	Node service = getElement("serviceState", messageElems);
+		    	if (service == null) {
+		    		continue;
+		    	}
+		    	 	
+		    	Node time = getElement("time", service.getChildNodes());
+		    	String timestamp = time.getTextContent();
+		    	
+		    	Node type = getElement("timeType", service.getChildNodes());
+		    	String timeType = type.getTextContent();
+		    	
+		    	Node between = getElement("between", service.getChildNodes());
+		    	
+		    	Node to = getElement("to", between.getChildNodes()); 
+		    	String[] locationToWithPrefix = to.getTextContent().split(":");
+		    	String locationToAsString = locationToWithPrefix[locationToWithPrefix.length - 1];
+		    	
+		    	LogicalLocation locationTo = null;
+		    	if (locationList.contains(locationToAsString)) {
+		    		locationTo = LogicalLocation.valueOf(locationToAsString);
+		    	}
+		    	else {
+		    		locationToAsString = locationToWithPrefix[locationToWithPrefix.length - 2];
+		    		locationTo = LogicalLocation.valueOf(locationToAsString);
+		    	}	    	
+		    	
+		    	Node from = getElement("from", between.getChildNodes());
+		    	String[] locationFromWithPrefix = from.getTextContent().split(":");
+		    	String locationFromAsString = locationFromWithPrefix[locationFromWithPrefix.length - 1];
+		    	
+		    	LogicalLocation locationFrom = null;
+		    	if (locationList.contains(locationFromAsString)) {
+		    		locationFrom = LogicalLocation.valueOf(locationFromAsString);
+		    	}
+		    	else {
+		    		locationFromAsString = locationFromWithPrefix[locationFromWithPrefix.length - 2];
+		    		locationFrom = LogicalLocation.valueOf(locationFromAsString);
+		    	}
+		    		    	
+		    	PortCallMessage pcm = createServiceMessage(vesselId, ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, locationTo, locationFrom, timestamp, TimeType.valueOf(timeType));
+		    	pcm.setPortCallId(portCallId);
+		    	pcm.setMessageId(messageId);
+		    	requestList.add(pcm);
+		    	
+		    }
+		}
+		catch (Exception e) {
+		    e.printStackTrace();
+		}
+		System.out.println("Received " + messages.getLength() + " message(s) from queue " + queueId);
+		return requestList;
+	}
+
+	
+	private Node getElement(String elementName, NodeList elements) {
+		for (int i = 0; i < elements.getLength(); i++) {
+			Node element = elements.item(i);
+			String[] nameSplit = element.getNodeName().split(":");
+			String noPrefixName = nameSplit[nameSplit.length - 1];
+			
+			if (noPrefixName.equals(elementName)) {
+				return element;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Fetch all messages from the queue with the given id.
@@ -260,7 +380,7 @@ public class PortCDMApi {
                 null, //groupWith (optional), messageId of the message to group with.
                 null //comment (optional)
         );
-    	pcm.setMessageId("urn:x-mrn:stm:portcdm:message:" + UUID.randomUUID().toString());
+    	pcm.setMessageId("urn:mrn:stm:portcdm:message:" + UUID.randomUUID().toString());
     	return pcm;
     }
 }
