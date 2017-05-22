@@ -57,4 +57,8 @@ public class PortCallInfo {
 		return toLocation;
 	}
 	
+	public String getTimeType() {
+		return timeType;
+	}
+	
 }
