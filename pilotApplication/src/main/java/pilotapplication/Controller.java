@@ -110,7 +110,7 @@ public class Controller implements Initializable {
      * @param nrToSend number of messages to send
      */	
     private void sendTestMessage() {
-	    String vesselId = "urn:mrn:stm:vessel:IMO:9501368";
+	    String vesselId = "urn:mrn:stm:vessel:IMO:9278234";
 	    String timestamp = dateFormat.format(new Date());
 		StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
 		PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, TimeType.ACTUAL);

@@ -215,7 +215,6 @@ public class PortCDMApi {
 	 * @return all messages fetched from the queue
 	 */
 	public List<PortCallMessage> fetchMessagesFromDevQueue(String queueId) {
-		
 		List<PortCallMessage> requestList = new LinkedList<>();
 		NodeList messages = null;
 		try {
@@ -243,37 +242,59 @@ public class PortCDMApi {
 		    DocumentBuilder builder = factory.newDocumentBuilder();
 		    InputSource is = new InputSource(new StringReader(xml));
 		    Document doc = builder.parse(is);
-		        
+		    
 		    messages = doc.getFirstChild().getChildNodes();
 		    for (int i = 0; i < messages.getLength(); i++) {
+		    		
 		    	NodeList messageElems = messages.item(i).getChildNodes();
 		    	
-		    	Node vessel = getElement("vesselId", messageElems);
-		    	String vesselId = vessel.getTextContent();
-		    	
-		    	Node msgId = getElement("messageId", messageElems);
-		    	String messageId = msgId.getTextContent();
-		    	
-		    	Node portCall = getElement("portCallId", messageElems);
-		    	String portCallId = portCall.getTextContent();
-		    	
 		    	Node service = getElement("serviceState", messageElems);
+		    	// We must be sure that this is a service request
 		    	if (service == null) {
 		    		continue;
 		    	}
-		    	 	
-		    	Node time = getElement("time", service.getChildNodes());
-		    	String timestamp = time.getTextContent();
 		    	
-		    	Node type = getElement("timeType", service.getChildNodes());
-		    	String timeType = type.getTextContent();
+		    	Node serviceObject = getElement("serviceObject", service.getChildNodes());
+		    	// Skip to the next message if this is not a pilotage request
+		    	if (serviceObject == null || !serviceObject.getTextContent().equals("PILOTAGE")) {
+					continue;
+		    	}
+		    	
+		    	Node portCallNode = getElement("portCallId", messageElems);
+		    	Node vesselNode = getElement("vesselId", messageElems); // Not all groups includes a vesselId, which is problematic  	
+		    	Node msgIdNode = getElement("messageId", messageElems);
+		    	
+		    	// We must make sure that no field that we require is missing
+		    	if (portCallNode == null || vesselNode == null || msgIdNode == null) {
+		    		continue;
+		    	}
+		    	
+		    	String portCallId = portCallNode.getTextContent();
+		    	String vesselId = vesselNode.getTextContent(); 
+		    	String messageId = msgIdNode.getTextContent();
+		    	
+		    	Node timeNode = getElement("time", service.getChildNodes());
+		    	Node timeTypeNode = getElement("timeType", service.getChildNodes());
+		    	
+		    	if (timeNode == null || timeTypeNode == null) {
+		    		continue;
+		    	}
+		    	
+		    	String timestamp = timeNode.getTextContent();
+		    	String timeType = timeTypeNode.getTextContent();
 		    	
 		    	Node between = getElement("between", service.getChildNodes());
 		    	
 		    	Node to = getElement("to", between.getChildNodes()); 
+		    	if (to == null) {
+		    		continue;
+		    	}
+		    	
 		    	String[] locationToWithPrefix = to.getTextContent().split(":");
 		    	String locationToAsString = locationToWithPrefix[locationToWithPrefix.length - 1];
 		    	
+		    	// Since the location string might come with a name appended at the end (urn:mrn:stm:location:segot:BERTH:optionalName), the only way
+		    	// to parse the logical location is to differ between the two cases.
 		    	LogicalLocation locationTo = null;
 		    	if (locationList.contains(locationToAsString)) {
 		    		locationTo = LogicalLocation.valueOf(locationToAsString);
@@ -284,6 +305,10 @@ public class PortCDMApi {
 		    	}	    	
 		    	
 		    	Node from = getElement("from", between.getChildNodes());
+		    	if (from == null) {
+		    		continue;
+		    	}
+		    	
 		    	String[] locationFromWithPrefix = from.getTextContent().split(":");
 		    	String locationFromAsString = locationFromWithPrefix[locationFromWithPrefix.length - 1];
 		    	
@@ -295,7 +320,8 @@ public class PortCDMApi {
 		    		locationFromAsString = locationFromWithPrefix[locationFromWithPrefix.length - 2];
 		    		locationFrom = LogicalLocation.valueOf(locationFromAsString);
 		    	}
-		    		    	
+		    	
+		    	// Create portcall message and add additional attributes
 		    	PortCallMessage pcm = createServiceMessage(vesselId, ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, locationTo, locationFrom, timestamp, TimeType.valueOf(timeType));
 		    	pcm.setPortCallId(portCallId);
 		    	pcm.setMessageId(messageId);
