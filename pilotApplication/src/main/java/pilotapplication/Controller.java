@@ -110,7 +110,7 @@ public class Controller implements Initializable {
      * @param nrToSend number of messages to send
      */	
     private void sendTestMessage() {
-	    String vesselId = "urn:mrn:stm:vessel:IMO:9278234";
+	    String vesselId = "urn:mrn:stm:vessel:IMO:9501368";
 	    String timestamp = dateFormat.format(new Date());
 		StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
 		PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, TimeType.ACTUAL);
@@ -197,7 +197,7 @@ public class Controller implements Initializable {
 		if (pcInfo.getConfirmationStatus()) {
 			confirmationLabel.setVisible(true);
 			bookTimeLabel.setVisible(true);
-			etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-8))); 
+			etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-1))); 
 		}
 		else {
 			bookTimeLabel.setVisible(false);
@@ -205,7 +205,7 @@ public class Controller implements Initializable {
 		}
 		
 		statusImg.setImage(new Image("pilotapplication/img/Inkommande.png")); // Sets ship image on popup window
-		etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-8))); 
+		etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-1))); 
 		departureLocationLabel.setText(pcInfo.getFromLocation());
 		arrivalLocationLabel.setText(pcInfo.getToLocation());
 	}
@@ -347,7 +347,7 @@ public class Controller implements Initializable {
         pcInfo.confirmRequest();
         confirmationLabel.setVisible(true);
         bookTimeLabel.setVisible(true);
-		bookTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-8))); 
+		bookTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-1))); 
 	}
 	
 	@FXML 
