@@ -33,7 +33,7 @@
                </font>
             </Text>
             <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" />
-            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedIncoming" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="56.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedIncoming" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -43,7 +43,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="189.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -53,7 +53,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="56.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="255.0" layoutY="436.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -107,32 +107,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="hourETA" alignment="CENTER" layoutX="130.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="hh">
-               <font>
-                  <Font size="8.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="minuteETA" alignment="CENTER" layoutX="153.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="mm">
-               <font>
-                  <Font size="8.0" />
-               </font>
-            </TextField>
-            <Label layoutX="152.0" layoutY="449.0" text=":">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Button layoutX="189.0" layoutY="435.0" mnemonicParsing="false" onAction="#pilotageCommencedEstimated" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
-               <graphic>
-                  <VBox prefHeight="41.0" prefWidth="65.0">
-                     <children>
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Påbörja" textFill="WHITE" />
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="lotsning" textFill="WHITE" />
-                     </children>
-                  </VBox>
-               </graphic>
-            </Button>
-            <Button layoutX="321.0" layoutY="436.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="189.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -142,21 +117,46 @@
                   </VBox>
                </graphic>
             </Button>
-            <TextField fx:id="monthETA" alignment="CENTER" layoutX="79.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="MM">
+            <TextField fx:id="hourETA" alignment="CENTER" layoutX="198.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="hh">
                <font>
                   <Font size="8.0" />
                </font>
             </TextField>
-            <TextField fx:id="yearETA" alignment="CENTER" layoutX="102.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="YY">
+            <TextField fx:id="minuteETA" alignment="CENTER" layoutX="226.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="mm">
                <font>
                   <Font size="8.0" />
                </font>
             </TextField>
-            <TextField fx:id="dayETA" alignment="CENTER" layoutX="56.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="DD">
+            <Label layoutX="222.0" layoutY="448.0" text=":">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <TextField fx:id="monthETA" alignment="CENTER" layoutX="135.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="MM">
                <font>
                   <Font size="8.0" />
                </font>
             </TextField>
+            <TextField fx:id="yearETA" alignment="CENTER" layoutX="165.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="YY">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="dayETA" alignment="CENTER" layoutX="105.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="DD">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <Label layoutX="160.0" layoutY="449.0" text="-">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="130.0" layoutY="449.0" text="-">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0">
