@@ -33,12 +33,12 @@
                </font>
             </Text>
             <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" />
-            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedIncoming" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
                         <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Förtöjning" textFill="WHITE" />
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="efterfrågad" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="inkommande" textFill="WHITE" />
                      </children>
                   </VBox>
                </graphic>
@@ -132,12 +132,12 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="321.0" layoutY="436.0" mnemonicParsing="false" onAction="#departurePilotVesselEstimated" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="436.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Lots" textFill="WHITE" />
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="avhämtad" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Förtöjning" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="utgående" textFill="WHITE" />
                      </children>
                   </VBox>
                </graphic>

@@ -9,6 +9,7 @@ public class PortCallInfo {
 	private String boatName;
 	private String fromLocation;
 	private String toLocation;
+	public String bookedTime;
 	private boolean confirmed;
 	
 	public PortCallInfo(String vesselId, String portCallId, String ETA, String timeType, String boatName, String fromLocation, String toLocation) {
@@ -18,6 +19,7 @@ public class PortCallInfo {
 		this.timeType = timeType;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
+		bookedTime = null;
 		confirmed = false;
 	}
 	

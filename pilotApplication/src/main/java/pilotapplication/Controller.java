@@ -103,7 +103,22 @@ public class Controller implements Initializable {
 	public String getInputETA() {
 		return "20" + yearETA.getText() + "-" + monthETA.getText() +  "-" + dayETA.getText() + "T" + hourETA.getText() + ":" + minuteETA.getText() + ":00Z";
 	}
-	
+
+	public String getInputETD() {
+		return "20" + (Integer.parseInt(yearETA.getText())+2) + "-" + monthETA.getText() +  "-" + dayETA.getText() + "T" + hourETA.getText() + ":" + minuteETA.getText() + ":00Z";
+	}/*	
+	public String getETD(String id) {
+		PortCallInfo pcInfo = portCallTable.get(id);
+		String[] ETA = pcInfo.getETA().split("T");
+		String[] time = ETA[1].split(":");
+		String hours = time[0];
+		int hoursAsInt = Integer.parseInt(hours);
+		int newHoursAsInt = hoursAsInt + 2;
+		String newTimestamp = ETA[0] + 'T' + String.valueOf(newHoursAsInt) + ":" + time[1] + ":" + time[2];
+		System.out.println(newTimestamp);
+		return "";
+	}
+	/*
 	/**
      * Sends a given number of pilotage requests to the backend
      * 
@@ -197,7 +212,8 @@ public class Controller implements Initializable {
 		if (pcInfo.getConfirmationStatus()) {
 			confirmationLabel.setVisible(true);
 			bookTimeLabel.setVisible(true);
-			etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-1))); 
+			bookTimeLabel.setText(pcInfo.bookedTime);
+			etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-4))); 
 		}
 		else {
 			bookTimeLabel.setVisible(false);
@@ -205,7 +221,7 @@ public class Controller implements Initializable {
 		}
 		
 		statusImg.setImage(new Image("pilotapplication/img/Inkommande.png")); // Sets ship image on popup window
-		etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-1))); 
+		etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-4))); 
 		departureLocationLabel.setText(pcInfo.getFromLocation());
 		arrivalLocationLabel.setText(pcInfo.getToLocation());
 	}
@@ -261,12 +277,12 @@ public class Controller implements Initializable {
 		String boatName = idListView.getSelectionModel().getSelectedItem();
 		String vesselId = portCallTable.get(boatName).getVesselId();
         StateWrapper wrapperLocation = new StateWrapper(LocationReferenceObject.PILOT, LocationTimeSequence.DEPARTURE_FROM, LogicalLocation.VESSEL);
-        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, getInputETA(), TimeType.ESTIMATED);
+        PortCallMessage pcmLocation = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperLocation, getInputETD(), TimeType.ESTIMATED);
         portcdmApi.sendPortCallMessage(pcmLocation);
         
         // Pilotage complete
         StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.COMPLETED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
-        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, getInputETA(), TimeType.ESTIMATED);
+        PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, getInputETD(), TimeType.ESTIMATED);
         portcdmApi.sendPortCallMessage(pcmService);
         
 	}
@@ -340,14 +356,17 @@ public class Controller implements Initializable {
 		String timestamp = dateFormat.format(new Date());
 		StateWrapper wrapperService = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.CONFIRMED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
         PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, timestamp, TimeType.ACTUAL);
-        portcdmApi.sendPortCallMessage(pcmService);
         
         PortCallInfo pcInfo = portCallTable.get(boatName);
+        pcInfo.bookedTime = pcInfo.getETA();
+        portcdmApi.sendPortCallMessage(pcmService);
+        //arrivalPilotVesselEstimated(null);
 		String[] eta = pcInfo.getETA().split("T");
         pcInfo.confirmRequest();
         confirmationLabel.setVisible(true);
         bookTimeLabel.setVisible(true);
-		bookTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-1))); 
+		bookTimeLabel.setText(pcInfo.bookedTime); 
+		
 	}
 	
 	@FXML 
