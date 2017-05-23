@@ -358,14 +358,14 @@ public class Controller implements Initializable {
         PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, timestamp, TimeType.ACTUAL);
         
         PortCallInfo pcInfo = portCallTable.get(boatName);
-        pcInfo.bookedTime = pcInfo.getETA();
+        pcInfo.bookedTime = getInputETA();
         portcdmApi.sendPortCallMessage(pcmService);
         //arrivalPilotVesselEstimated(null);
 		String[] eta = pcInfo.getETA().split("T");
         pcInfo.confirmRequest();
-        confirmationLabel.setVisible(true);
         bookTimeLabel.setVisible(true);
-		bookTimeLabel.setText(pcInfo.bookedTime); 
+        String[] bookedDate = pcInfo.bookedTime.split("T");
+		bookTimeLabel.setText(bookedDate[0] + "\n" + bookedDate[1].substring(0, bookedDate[1].length() - 4)); 
 		
 	}
 	
