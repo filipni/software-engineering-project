@@ -33,10 +33,6 @@
                </font>
             </Text>
             <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" />
-            <Text fx:id="vesselStatusText" fill="#3c8dc2cc" layoutX="4.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429">
-               <font>
-                  <Font size="18.0" />
-               </font></Text>
             <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
@@ -103,12 +99,12 @@
             </Label>
             <Label fx:id="etaTimeLabel" alignment="TOP_LEFT" layoutX="279.0" layoutY="311.0" prefHeight="50.0" prefWidth="180.0" text="17:25 23-april">
                <font>
-                  <Font size="16.0" />
+                  <Font size="20.0" />
                </font>
             </Label>
             <Label fx:id="bookTimeLabel" alignment="TOP_LEFT" layoutX="58.0" layoutY="311.0" prefHeight="50.0" prefWidth="180.0" text="17:25 23-april">
                <font>
-                  <Font size="16.0" />
+                  <Font size="20.0" />
                </font>
             </Label>
             <TextField fx:id="hourETA" alignment="CENTER" layoutX="130.0" layoutY="442.0" prefHeight="30.0" prefWidth="24.0" promptText="hh">

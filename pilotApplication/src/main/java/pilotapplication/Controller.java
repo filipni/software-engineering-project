@@ -204,15 +204,7 @@ public class Controller implements Initializable {
 			confirmationLabel.setVisible(false);
 		}
 		
-		// Set all portcalls that do not have an IMO starting with "9" to incoming
-		if (!id.startsWith("9")) {
-			statusImg.setImage(new Image("pilotapplication/img/Inkommande.png"));
-			vesselStatusText.setText("Inkommande");
-		}	
-		else {
-			statusImg.setImage(new Image("pilotapplication/img/Avgående.png"));
-			vesselStatusText.setText("Avgående");
-		}
+		statusImg.setImage(new Image("pilotapplication/img/Inkommande.png")); // Sets ship image on popup window
 		etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-8))); 
 		departureLocationLabel.setText(pcInfo.getFromLocation());
 		arrivalLocationLabel.setText(pcInfo.getToLocation());
