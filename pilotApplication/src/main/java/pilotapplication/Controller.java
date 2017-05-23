@@ -352,7 +352,6 @@ public class Controller implements Initializable {
 	
 	@FXML 
 	public void mooringRequestedOutgoing(ActionEvent event) {
-		/*
 		String boatName = idListView.getSelectionModel().getSelectedItem();
 		String vesselId = portCallTable.get(boatName).getVesselId();
 		String timestamp = dateFormat.format(new Date());
@@ -363,13 +362,10 @@ public class Controller implements Initializable {
 		PortCallInfo pcInfo = portCallTable.get(boatName);
 		pcInfo.confirmRequest(); //should this be called?
 		//Set appropriate label here
-		*/
-		System.out.println("Not implemented yet");
 	}		
 			
 	@FXML 
 	public void mooringRequestedIncoming(ActionEvent event) {
-		/*
 		String boatName = idListView.getSelectionModel().getSelectedItem();
 		String vesselId = portCallTable.get(boatName).getVesselId();
 		String timestamp = dateFormat.format(new Date());
@@ -379,9 +375,6 @@ public class Controller implements Initializable {
 		
 		PortCallInfo pcInfo = portCallTable.get(boatName);
 		pcInfo.confirmRequest(); //should this be called?
-		//Set appropriate label here
-		*/
-		System.out.println("Not implemented yet");
 	}		
 
 }
