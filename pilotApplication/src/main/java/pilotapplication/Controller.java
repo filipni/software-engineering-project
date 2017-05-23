@@ -52,7 +52,7 @@ public class Controller implements Initializable {
 	private GridPane gridPane1; 
 	
 	@FXML 
-	private Label updateLabel, confirmationLabel, departureLocationLabel, arrivalLocationLabel, etaTimeLabel, bookTimeLabel;
+	private Label updateLabel, departureLocationLabel, arrivalLocationLabel, etaTimeLabel, bookTimeLabel;
 	
 	@FXML 
 	private HBox hBoxRec1, hBoxRec2; 
@@ -125,11 +125,13 @@ public class Controller implements Initializable {
      * @param nrToSend number of messages to send
      */	
     private void sendTestMessage() {
-	    String vesselId = "urn:mrn:stm:vessel:IMO:9501368";
+	    String[] vesselIds = {"urn:mrn:stm:vessel:IMO:9501368", "urn:mrn:stm:vessel:IMO:9236315"};
 	    String timestamp = dateFormat.format(new Date());
-		StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
-		PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, TimeType.ACTUAL);
-		portcdmApi.sendPortCallMessage(pcm);   
+	    for (String vesselId : vesselIds) {
+	    	StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
+	    	PortCallMessage pcm = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapper, timestamp, TimeType.ACTUAL);
+	    	portcdmApi.sendPortCallMessage(pcm);
+	    }
            
         // Wait for a while to make sure the message arrives at the queue
         try {
@@ -210,14 +212,12 @@ public class Controller implements Initializable {
 		PortCallInfo pcInfo = portCallTable.get(id);
 		String[] eta = pcInfo.getETA().split("T");
 		if (pcInfo.getConfirmationStatus()) {
-			confirmationLabel.setVisible(true);
 			bookTimeLabel.setVisible(true);
 			bookTimeLabel.setText(pcInfo.bookedTime);
 			etaTimeLabel.setText(eta[0] + "\n" + eta[1].substring(0, (eta[1].length()-4))); 
 		}
 		else {
 			bookTimeLabel.setVisible(false);
-			confirmationLabel.setVisible(false);
 		}
 		
 		statusImg.setImage(new Image("pilotapplication/img/Inkommande.png")); // Sets ship image on popup window
@@ -358,15 +358,17 @@ public class Controller implements Initializable {
         PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, timestamp, TimeType.ACTUAL);
         
         PortCallInfo pcInfo = portCallTable.get(boatName);
-        pcInfo.bookedTime = getInputETA();
+        String input = getInputETA();
+        String[] bookedDate = input.split("T");
+        
+        pcInfo.bookedTime = bookedDate[0] + "\n" + bookedDate[1].substring(0, bookedDate[1].length() - 4);
+        bookTimeLabel.setText(pcInfo.bookedTime);
+        
         portcdmApi.sendPortCallMessage(pcmService);
         //arrivalPilotVesselEstimated(null);
-		String[] eta = pcInfo.getETA().split("T");
-        pcInfo.confirmRequest();
-        bookTimeLabel.setVisible(true);
-        String[] bookedDate = pcInfo.bookedTime.split("T");
-		bookTimeLabel.setText(bookedDate[0] + "\n" + bookedDate[1].substring(0, bookedDate[1].length() - 4)); 
 		
+        pcInfo.confirmRequest();
+        bookTimeLabel.setVisible(true);		
 	}
 	
 	@FXML 

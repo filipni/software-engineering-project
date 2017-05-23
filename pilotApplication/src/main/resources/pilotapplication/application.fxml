@@ -63,10 +63,6 @@
                   </VBox>
                </graphic>
             </Button>
-            <Label fx:id="confirmationLabel" layoutX="58.0" layoutY="360.0" text="Bekräftad" textFill="#39b54a" visible="false">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Label>
             <Label fx:id="arrivalLocationLabel" alignment="TOP_LEFT" layoutX="279.0" layoutY="213.0" prefHeight="25.0" prefWidth="156.0" text="Kaj" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
                <font>
                   <Font size="20.0" />
