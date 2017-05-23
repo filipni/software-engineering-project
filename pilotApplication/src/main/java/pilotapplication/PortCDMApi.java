@@ -40,7 +40,7 @@ import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 public class PortCDMApi {
 
 	// Parameters for the external development machine
-	private final String DEV_BASE_URL = "http://dev.portcdm.eu:8080/";
+	private final String DEV_BASE_URL = "http://sandbox-5.portcdm.eu:8080/";
 	private final String DEV_USERNAME = "viktoria";
 	private final String DEV_PASSWORD = "vik123"; 
 	private final String DEV_API_KEY = "pilot";
