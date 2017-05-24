@@ -1,15 +1,28 @@
 package pilotapplication;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import eu.portcdm.amss.client.StateupdateApi;
 import eu.portcdm.client.ApiException;
 import eu.portcdm.client.service.PortcallsApi;
 import eu.portcdm.dto.LocationTimeSequence;
+import eu.portcdm.dto.PortCall;
 import eu.portcdm.dto.PortCallSummary;
 import eu.portcdm.mb.client.MessageQueueServiceApi;
 import eu.portcdm.mb.dto.Filter;
@@ -23,7 +36,6 @@ import eu.portcdm.messaging.TimeType;
 import se.viktoria.stm.portcdm.connector.common.SubmissionService;
 import se.viktoria.stm.portcdm.connector.common.util.PortCallMessageBuilder;
 import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
-import se.viktoria.util.Configuration;
 
 public class PortCDMApi {
 
@@ -33,7 +45,6 @@ public class PortCDMApi {
 	private final String DEV_PASSWORD = "vik123"; 
 	private final String DEV_API_KEY = "pilot";
 	private final int DEV_TIMEOUT = 20000;
-	private  final String DEV_CONFIG_FILE_NAME = "dev_portcdm.conf";
 		
 	// Parameters for the local virtual machine
 	private final String VM_BASE_URL = "http://192.168.56.101:8080/";
@@ -41,7 +52,6 @@ public class PortCDMApi {
 	private final String VM_PASSWORD = "porter"; // LOL security
 	private final String VM_API_KEY = "pilot";	
 	private final int VM_TIMEOUT = 7000;
-	private  final String VM_CONFIG_FILE_NAME = "vm_portcdm.conf";
 
 	// Paths to PortCDMs different modules
 	private final String MESSAGE_BROKER_PATH = "mb";
@@ -52,6 +62,18 @@ public class PortCDMApi {
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
 	public StateupdateApi AMSSApi; 
+		
+	private final List<String> locationList = Arrays.asList(
+			LogicalLocation.ANCHORING_AREA.toString(), 
+			LogicalLocation.BERTH.toString(), 
+			LogicalLocation.ETUG_ZONE.toString(), 
+			LogicalLocation.TUG_ZONE.toString(),
+			LogicalLocation.LOC.toString(), 
+			LogicalLocation.PILOT_BOARDING_AREA.toString(), 
+			LogicalLocation.RENDEZV_AREA.toString(), 
+			LogicalLocation.TRAFFIC_AREA.toString(), 
+			LogicalLocation.TUG_ZONE.toString(), 
+			LogicalLocation.VESSEL.toString());
 
 	/**
 	 * Constructor for the PortCDMApi object
@@ -60,39 +82,15 @@ public class PortCDMApi {
 	 */
 	public PortCDMApi(boolean connectToExternalServer) {
 		if (connectToExternalServer) {
-			initSubmissionService(DEV_CONFIG_FILE_NAME, null);
 			initMessageBrokerAPI(DEV_BASE_URL + MESSAGE_BROKER_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 			initPortCallsAPI(DEV_BASE_URL + PORT_CDM_SERVICES_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
-			initAMSSApi(DEV_BASE_URL + PORT_CDM_SERVICES_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
+			initAMSSApi(DEV_BASE_URL + PORT_CDM_AMSS_PATH, DEV_TIMEOUT, DEV_USERNAME, DEV_PASSWORD, DEV_API_KEY);
 		}
 		else {
-			initSubmissionService(VM_CONFIG_FILE_NAME, null);
 			initMessageBrokerAPI(VM_BASE_URL + MESSAGE_BROKER_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
 			initPortCallsAPI(VM_BASE_URL + PORT_CDM_SERVICES_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY);
 			initAMSSApi(VM_BASE_URL + PORT_CDM_AMSS_PATH, VM_TIMEOUT, VM_USERNAME, VM_PASSWORD, VM_API_KEY); 
 		}	
-	}
-
-	/**
-	 * Init connector (submissionService) to portCDM.
-	 * 
-	 * @param configFileName	filename for application configuration	
-	 * @param configFileDir		leaf directory for application configuration
-	 */
-	private void initSubmissionService(String configFileName, String configFileDir) {
-		Configuration config = new Configuration(
-				configFileName, 
-				configFileDir,
-				new Predicate<Map.Entry<Object, Object>>() {
-					@Override
-					public boolean test(Map.Entry<Object, Object> objectObjectEntry) {
-						return !objectObjectEntry.getKey().toString().equals("pass");
-				}	
-		});
-		config.reload();		
-		
-		submissionService = new SubmissionService();
-		submissionService.addConnectors(config);
 	}
 
 	/**
@@ -151,6 +149,23 @@ public class PortCDMApi {
 		}
 		return portcalls;
 	}
+	
+	/**
+	 * Fetch a specific portcall identified by a portcall id.
+	 * 
+	 * @param portCallId
+	 * @return portcall fetched from portCDM
+	 */
+	public PortCall getPortCall(String portCallId) {
+		PortCall portcall = null;
+		try {
+			portcall = portCallsAPI.getPortCall(portCallId);
+		} catch (ApiException e) {
+			System.out.println("Couldn't fetch portcall.");
+			System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
+		}
+		return portcall;
+	}
 
 	/**
 	 * Submit a portcall message to PortCDM. 
@@ -188,6 +203,155 @@ public class PortCDMApi {
 			System.out.println(e.getCode() + " " + e.getMessage() + '\n' + e.getResponseBody());
 		}
 		return queueId;
+	}
+	
+	/**
+	 * Let me present to you, *drumroll*, the ugliest code in the world! 
+	 * 
+	 * Fetch all messages from the queue with the given id.
+	 * This method should only be used when communicating with the development server.
+	 * 
+	 * @param queueId id of the queue of interest
+	 * @return all messages fetched from the queue
+	 */
+	public List<PortCallMessage> fetchMessagesFromDevQueue(String queueId) {
+		List<PortCallMessage> requestList = new LinkedList<>();
+		NodeList messages = null;
+		try {
+			URL url = new URL(DEV_BASE_URL + "mb/mqs/" + queueId);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Accept", "application/xml");
+			conn.setRequestProperty("X-PortCDM-UserId", DEV_USERNAME);
+			conn.setRequestProperty("X-PortCDM-Password", DEV_PASSWORD);
+			conn.setRequestProperty("X-PortCDM-APIKey", DEV_API_KEY);
+	
+			if (conn.getResponseCode() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode() + " " + conn.getResponseMessage());
+			}
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+				(conn.getInputStream())));
+			
+			String xml = br.readLine();
+			if (xml == null) {
+				return requestList;
+			}
+			conn.getInputStream().close(); // Necessary?
+			
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    InputSource is = new InputSource(new StringReader(xml));
+		    Document doc = builder.parse(is);
+		    
+		    messages = doc.getFirstChild().getChildNodes();
+		    for (int i = 0; i < messages.getLength(); i++) {
+		    		
+		    	NodeList messageElems = messages.item(i).getChildNodes();
+		    	
+		    	Node service = getElement("serviceState", messageElems);
+		    	// We must be sure that this is a service request
+		    	if (service == null) {
+		    		continue;
+		    	}
+		    	
+		    	Node serviceObject = getElement("serviceObject", service.getChildNodes());
+		    	// Skip to the next message if this is not a pilotage request
+		    	if (serviceObject == null || !serviceObject.getTextContent().equals("PILOTAGE")) {
+					continue;
+		    	}
+		    	
+		    	Node portCallNode = getElement("portCallId", messageElems);
+		    	Node vesselNode = getElement("vesselId", messageElems); // Not all groups include a vesselId, which is problematic  	
+		    	Node msgIdNode = getElement("messageId", messageElems);
+		    	
+		    	// We must make sure that no field that we require is missing
+		    	if (portCallNode == null || vesselNode == null || msgIdNode == null) {
+		    		continue;
+		    	}
+		    	
+		    	String portCallId = portCallNode.getTextContent();
+		    	String vesselId = vesselNode.getTextContent(); 
+		    	String messageId = msgIdNode.getTextContent();
+		    	
+		    	Node timeNode = getElement("time", service.getChildNodes());
+		    	Node timeTypeNode = getElement("timeType", service.getChildNodes());
+		    	
+		    	if (timeNode == null || timeTypeNode == null) {
+		    		continue;
+		    	}
+		    	
+		    	String timestamp = timeNode.getTextContent();
+		    	String timeType = timeTypeNode.getTextContent();
+		    	
+		    	Node between = getElement("between", service.getChildNodes());
+		    	
+		    	Node to = getElement("to", between.getChildNodes()); 
+		    	if (to == null) {
+		    		continue;
+		    	}
+		    	
+		    	String[] locationToWithPrefix = to.getTextContent().split(":");
+		    	String locationToAsString = locationToWithPrefix[locationToWithPrefix.length - 1];
+		    	
+		    	// Since the location string might come with a name appended at the end (urn:mrn:stm:location:segot:BERTH:optionalName), the only way
+		    	// to parse the logical location is to differ between the two cases.
+		    	LogicalLocation locationTo = null;
+		    	if (locationList.contains(locationToAsString)) {
+		    		locationTo = LogicalLocation.valueOf(locationToAsString);
+		    	}
+		    	else {
+		    		locationToAsString = locationToWithPrefix[locationToWithPrefix.length - 2];
+		    		locationTo = LogicalLocation.valueOf(locationToAsString);
+		    	}	    	
+		    	
+		    	Node from = getElement("from", between.getChildNodes());
+		    	if (from == null) {
+		    		continue;
+		    	}
+		    	
+		    	String[] locationFromWithPrefix = from.getTextContent().split(":");
+		    	String locationFromAsString = locationFromWithPrefix[locationFromWithPrefix.length - 1];
+		    	
+		    	LogicalLocation locationFrom = null;
+		    	if (locationList.contains(locationFromAsString)) {
+		    		locationFrom = LogicalLocation.valueOf(locationFromAsString);
+		    	}
+		    	else {
+		    		locationFromAsString = locationFromWithPrefix[locationFromWithPrefix.length - 2];
+		    		locationFrom = LogicalLocation.valueOf(locationFromAsString);
+		    	}
+		    	
+		    	// Create portcall message and add additional attributes
+		    	PortCallMessage pcm = createServiceMessage(vesselId, ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, locationTo, locationFrom, timestamp, TimeType.valueOf(timeType));
+		    	pcm.setPortCallId(portCallId);
+		    	pcm.setMessageId(messageId);
+		    	requestList.add(pcm);
+		    	
+		    }
+		}
+		catch (Exception e) {
+		    e.printStackTrace();
+		}
+		if (messages != null) {
+			System.out.println("Received " + messages.getLength() + " message(s) from queue " + queueId);
+		}
+		return requestList;
+	}
+	
+	private Node getElement(String elementName, NodeList elements) {
+		for (int i = 0; i < elements.getLength(); i++) {
+			Node element = elements.item(i);
+			String[] nameSplit = element.getNodeName().split(":");
+			String noPrefixName = nameSplit[nameSplit.length - 1];
+			
+			if (noPrefixName.equals(elementName)) {
+				return element;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -229,16 +393,11 @@ public class PortCDMApi {
      * @param timestamp timestamp in the format: "yyyy-MM-dd'T'HH:mm:ss'Z'"
      * @param timeType timestamp type, e.g. ACTUAL, ESTIMATE etc.
      * @return the newly created portcall message
-     */
-    
-	private final int MIN_JOB_ID = 100000000; 
-	private final int MAX_JOB_ID = 999999999;
-	
+     */	
     public PortCallMessage portCallMessageFromStateWrapper(String vesselId, StateWrapper wrapper, String timestamp, TimeType timeType) {
-    	int jobId = ThreadLocalRandom.current().nextInt(MIN_JOB_ID, MAX_JOB_ID + 1);
     	PortCallMessage pcm = PortCallMessageBuilder.build(
-    			"urn:x-mrn:stm:portcdm:local_port_call:SEGOT:DHC:" + UUID.randomUUID().toString(), //localPortCallId
-    			"urn:x-mrn:stm:portcdm:local_job:FENIX_SMA:" + jobId, //localJobId
+    			null, //localPortCallId
+    			null, //localJobId
                 wrapper, //StateWrapper created above
                 timestamp, //Message's time
                 timeType, //Message's timeType
@@ -248,7 +407,7 @@ public class PortCDMApi {
                 null, //groupWith (optional), messageId of the message to group with.
                 null //comment (optional)
         );
-    	pcm.setMessageId("urn:x-mrn:stm:portcdm:message:" + UUID.randomUUID().toString());
+    	pcm.setMessageId("urn:mrn:stm:portcdm:message:" + UUID.randomUUID().toString());
     	return pcm;
     }
 }

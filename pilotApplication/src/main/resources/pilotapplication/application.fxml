@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,7 +25,7 @@
             <Label fx:id="updateLabel" layoutX="31.0" layoutY="635.0" text="Uppdaterad: 2017-05-12" textFill="#ababab" />
          </children>
       </AnchorPane>
-      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="380.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css" visible="false">
+      <AnchorPane id="infoPopUp" fx:id="vesselInfoPane" layoutX="268.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="517.0" prefWidth="499.0" styleClass="transRect" stylesheets="@application.css">
          <children>
             <Text fx:id="idText" fill="#000000cc" layoutX="13.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.7294921875">
                <font>
@@ -32,41 +33,17 @@
                </font>
             </Text>
             <ImageView fx:id="statusImg" fitHeight="82.0" fitWidth="82.0" layoutX="210.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" />
-            <Text fx:id="vesselStatusText" fill="#3c8dc2cc" layoutX="4.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="494.0000120997429">
-               <font>
-                  <Font size="18.0" />
-               </font></Text>
-            <Text fill="#000000cc" layoutX="83.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lots Bokad" textAlignment="CENTER" AnchorPane.leftAnchor="83.0">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fill="#000000cc" layoutX="282.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA mötesplats" textAlignment="CENTER" AnchorPane.rightAnchor="63.052734375">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fx:id="bookTimeText" fill="#000000cc" layoutX="69.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.leftAnchor="67.0">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fx:id="etaTimeText" fill="#000000cc" layoutX="287.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17:25 23-april" textAlignment="CENTER" AnchorPane.rightAnchor="69.052734375">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Button layoutX="321.0" layoutY="292.0" mnemonicParsing="false" onAction="#mooringRequested" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="56.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedIncoming" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
                         <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Förtöjning" textFill="WHITE" />
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="efterfrågad" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="inkommande" textFill="WHITE" />
                      </children>
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="189.0" layoutY="292.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="321.0" layoutY="380.0" mnemonicParsing="false" onAction="#pilotageDenied" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -76,7 +53,7 @@
                   </VBox>
                </graphic>
             </Button>
-            <Button layoutX="56.0" layoutY="292.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+            <Button layoutX="255.0" layoutY="436.0" mnemonicParsing="false" onAction="#pilotageConfirmed" prefHeight="42.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
                <graphic>
                   <VBox prefHeight="41.0" prefWidth="65.0">
                      <children>
@@ -86,10 +63,99 @@
                   </VBox>
                </graphic>
             </Button>
-            <Label fx:id="confirmationLabel" layoutX="104.0" layoutY="234.0" text="Bekräftad" textFill="#39b54a" visible="false" />
+            <Label fx:id="arrivalLocationLabel" alignment="TOP_LEFT" layoutX="279.0" layoutY="213.0" prefHeight="25.0" prefWidth="156.0" text="Kaj" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="TOP_LEFT" layoutX="279.0" layoutY="180.0" prefHeight="25.0" prefWidth="156.0" text="Till" textFill="#3c8dc2" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="64.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="TOP_LEFT" layoutX="58.0" layoutY="180.0" prefHeight="25.0" prefWidth="156.0" text="Från" textFill="#3c8dc2" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="285.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="TOP_LEFT" layoutX="279.0" layoutY="281.0" prefHeight="25.0" prefWidth="156.0" text="ETA" textFill="#3c8dc2">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="departureLocationLabel" alignment="TOP_LEFT" layoutX="58.0" layoutY="213.0" prefHeight="25.0" text="Lotsplats" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="285.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="TOP_LEFT" layoutX="58.0" layoutY="281.0" prefHeight="25.0" prefWidth="156.0" text="Lots bokad" textFill="#3c8dc2">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="etaTimeLabel" alignment="TOP_LEFT" layoutX="279.0" layoutY="311.0" prefHeight="50.0" prefWidth="180.0" text="17:25 23-april">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookTimeLabel" alignment="TOP_LEFT" layoutX="58.0" layoutY="311.0" prefHeight="50.0" prefWidth="180.0" text="17:25 23-april">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Button layoutX="189.0" layoutY="380.0" mnemonicParsing="false" onAction="#mooringRequestedOutgoing" prefHeight="41.0" prefWidth="117.0" styleClass="serviceButton" stylesheets="@application.css">
+               <graphic>
+                  <VBox prefHeight="41.0" prefWidth="65.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="109.0" text="Förtöjning" textFill="WHITE" />
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="107.0" text="utgående" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <TextField fx:id="hourETA" alignment="CENTER" layoutX="198.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="hh">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="minuteETA" alignment="CENTER" layoutX="226.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="mm">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <Label layoutX="222.0" layoutY="448.0" text=":">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <TextField fx:id="monthETA" alignment="CENTER" layoutX="135.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="MM">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="yearETA" alignment="CENTER" layoutX="165.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="YY">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="dayETA" alignment="CENTER" layoutX="105.0" layoutY="437.0" prefHeight="40.0" prefWidth="24.0" promptText="DD">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </TextField>
+            <Label layoutX="160.0" layoutY="449.0" text="-">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="130.0" layoutY="449.0" text="-">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0" visible="false">
+      <AnchorPane fx:id="phonePane" layoutX="813.0" layoutY="45.0" prefHeight="370.0" prefWidth="222.0">
          <children>
             <ImageView fitHeight="499.0" fitWidth="411.0" pickOnBounds="true" preserveRatio="true">
                <image>
