@@ -84,7 +84,7 @@ public class Controller implements Initializable {
 		createReversedLocationMap();
 		
 		createPilotageRequestQueue();
-		sendTestMessage();
+		sendTestMessage(); 
 		updateRequestList(null);
 	}
 	
@@ -182,7 +182,7 @@ public class Controller implements Initializable {
      * @param nrToSend number of messages to send
      */	
     private void sendTestMessage() {
-	    String[] vesselIds = {"urn:mrn:stm:vessel:IMO:9501368", "urn:mrn:stm:vessel:IMO:9236315"};
+	    String[] vesselIds = {"urn:mrn:stm:vessel:IMO:8027298", "urn:mrn:stm:vessel:IMO:8327105"};
 	    String timestamp = dateFormat.format(new Date());
 	    for (String vesselId : vesselIds) {
 	    	StateWrapper wrapper = new StateWrapper(ServiceObject.PILOTAGE, ServiceTimeSequence.REQUESTED, LogicalLocation.TUG_ZONE, LogicalLocation.VESSEL);
@@ -231,7 +231,7 @@ public class Controller implements Initializable {
 		}
 		
 		for (PortCallMessage pcm : messages) {
-			if (pcm.getServiceState().getServiceObject().toString() == "PILOTAGE") {
+			if (pcm.getServiceState().getServiceObject().toString().equals("PILOTAGE")) {
 				String boatName = portcdmApi.getPortCall(pcm.getPortCallId()).getVessel().getName();
 				String toLocation = locationMap.get(pcm.getServiceState().getBetween().getTo().getLocationType());
 				String fromLocation = locationMap.get(pcm.getServiceState().getBetween().getFrom().getLocationType());
@@ -329,7 +329,6 @@ public class Controller implements Initializable {
         removeRequest(boatName);  
 	}
 	
-	@FXML
 	public void pilotageCompleteEstimated(String boatName) {
 		PortCallInfo pcInfo = portCallTable.get(boatName);
 		String vesselId = pcInfo.getVesselId();
@@ -438,8 +437,6 @@ public class Controller implements Initializable {
 		StateWrapper wrapperService = new StateWrapper(ServiceObject.DEPARTURE_MOORING_OPERATION, ServiceTimeSequence.REQUESTED, LogicalLocation.BERTH);
 		PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, timestamp, TimeType.ESTIMATED);
 		portcdmApi.sendPortCallMessage(pcmService);
-		
-		PortCallInfo pcInfo = portCallTable.get(boatName);
 	}		
 			
 	@FXML 
@@ -450,8 +447,6 @@ public class Controller implements Initializable {
 		StateWrapper wrapperService = new StateWrapper(ServiceObject.ARRIVAL_MOORING_OPERATION, ServiceTimeSequence.REQUESTED, LogicalLocation.BERTH);
 		PortCallMessage pcmService = portcdmApi.portCallMessageFromStateWrapper(vesselId, wrapperService, timestamp, TimeType.ESTIMATED);
 		portcdmApi.sendPortCallMessage(pcmService);
-		
-		PortCallInfo pcInfo = portCallTable.get(boatName);
 	}		
 
 }

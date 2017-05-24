@@ -19,6 +19,7 @@ public class PortCallInfo {
 		this.timeType = timeType;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
+		this.boatName = boatName;
 		bookedTime = null;
 		confirmed = false;
 	}

@@ -40,7 +40,7 @@ import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 public class PortCDMApi {
 
 	// Parameters for the external development machine
-	private final String DEV_BASE_URL = "http://sandbox-5.portcdm.eu:8080/";
+	private final String DEV_BASE_URL = "http://dev.portcdm.eu:8080/";
 	private final String DEV_USERNAME = "viktoria";
 	private final String DEV_PASSWORD = "vik123"; 
 	private final String DEV_API_KEY = "pilot";
@@ -236,6 +236,9 @@ public class PortCDMApi {
 				(conn.getInputStream())));
 			
 			String xml = br.readLine();
+			if (xml == null) {
+				return requestList;
+			}
 			conn.getInputStream().close(); // Necessary?
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -332,7 +335,9 @@ public class PortCDMApi {
 		catch (Exception e) {
 		    e.printStackTrace();
 		}
-		System.out.println("Received " + messages.getLength() + " message(s) from queue " + queueId);
+		if (messages != null) {
+			System.out.println("Received " + messages.getLength() + " message(s) from queue " + queueId);
+		}
 		return requestList;
 	}
 	
