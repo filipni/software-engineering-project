@@ -33,32 +33,30 @@ import eu.portcdm.messaging.ServiceObject;
 import eu.portcdm.messaging.ServiceTimeSequence;
 import eu.portcdm.messaging.TimeType;
 
-import se.viktoria.stm.portcdm.connector.common.SubmissionService;
 import se.viktoria.stm.portcdm.connector.common.util.PortCallMessageBuilder;
 import se.viktoria.stm.portcdm.connector.common.util.StateWrapper;
 
 public class PortCDMApi {
 
 	// Parameters for the external development machine
-	private final String DEV_BASE_URL = "http://dev.portcdm.eu:8080/";
-	private final String DEV_USERNAME = "viktoria";
-	private final String DEV_PASSWORD = "vik123"; 
-	private final String DEV_API_KEY = "pilot";
-	private final int DEV_TIMEOUT = 20000;
+	private static final String DEV_BASE_URL = "http://dev.portcdm.eu:8080/";
+	private static final String DEV_USERNAME = "viktoria";
+	private static final String DEV_PASSWORD = "vik123"; 
+	private static final String DEV_API_KEY = "pilot";
+	private static final int DEV_TIMEOUT = 20000;
 		
 	// Parameters for the local virtual machine
-	private final String VM_BASE_URL = "http://192.168.56.101:8080/";
-	private final String VM_USERNAME = "porter";
-	private final String VM_PASSWORD = "porter"; // LOL security
-	private final String VM_API_KEY = "pilot";	
-	private final int VM_TIMEOUT = 7000;
+	private static final String VM_BASE_URL = "http://192.168.56.101:8080/";
+	private static final String VM_USERNAME = "porter";
+	private static final String VM_PASSWORD = "porter"; // LOL security
+	private static final String VM_API_KEY = "pilot";	
+	private static final int VM_TIMEOUT = 7000;
 
 	// Paths to PortCDMs different modules
-	private final String MESSAGE_BROKER_PATH = "mb";
-	private final String PORT_CDM_SERVICES_PATH = "dmp";
-	private final String PORT_CDM_AMSS_PATH = "amss";
+	private static final String MESSAGE_BROKER_PATH = "mb";
+	private static final String PORT_CDM_SERVICES_PATH = "dmp";
+	private static final String PORT_CDM_AMSS_PATH = "amss";
 	
-	public SubmissionService submissionService;
 	public MessageQueueServiceApi messageBrokerAPI;
 	public PortcallsApi portCallsAPI;
 	public StateupdateApi AMSSApi; 
@@ -232,14 +230,22 @@ public class PortCDMApi {
 						+ conn.getResponseCode() + " " + conn.getResponseMessage());
 			}
 			
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-				(conn.getInputStream())));
+			String xml;
+			InputStreamReader ir = new InputStreamReader(conn.getInputStream(), "UTF-8");
 			
-			String xml = br.readLine();
-			if (xml == null) {
-				return requestList;
+			BufferedReader br = null;
+			try {
+				br = new BufferedReader(ir);	
+				xml = br.readLine();
+				if (xml == null) {
+					return requestList;
+				}
 			}
-			conn.getInputStream().close(); // Necessary?
+			finally {
+				if (br != null) {
+					br.close();
+				}
+			}
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		    DocumentBuilder builder = factory.newDocumentBuilder();
@@ -331,6 +337,9 @@ public class PortCDMApi {
 		    	requestList.add(pcm);
 		    	
 		    }
+		}
+		catch (RuntimeException e) {
+			throw e;
 		}
 		catch (Exception e) {
 		    e.printStackTrace();
