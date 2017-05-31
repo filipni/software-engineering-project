@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="3.0.1-dev-20150306-5afe4d1" sequence="1" timestamp="1496261494164" analysisTimestamp="1496261492492" release="">
+  <Project projectName="pilotApplication">
+    <Jar>/pilotApplication/target/test-classes</Jar>
+    <Jar>/home/filip/git/Software-Engineering-Project/pilotApplication/target/classes</Jar>
+    <AuxClasspathEntry>/home/filip/git/Software-Engineering-Project/pilotApplication/target/classes</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.p2/pool/plugins/org.eclipse.fx.ide.css.jfx8_2.4.0.201605112122.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/se/viktoria/stm/portcdm/demonstrator-connector/common/1.5-SNAPSHOT/common-1.5-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.4.2/jackson-annotations-2.4.2.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/io/swagger/swagger-annotations/1.5.0/swagger-annotations-1.5.0.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/com/squareup/okhttp/logging-interceptor/2.7.5/logging-interceptor-2.7.5.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/eu/portcdm/port-call-message-format/1.5-SNAPSHOT/port-call-message-format-1.5-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/xerial/sqlite-jdbc/3.8.11.2/sqlite-jdbc-3.8.11.2.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/eu/portcdm/client-api/1.5-SNAPSHOT/client-api-1.5-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/eu/portcdm/amss-client/1.6-SNAPSHOT/amss-client-1.6-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/se/viktoria/util/1.5-SNAPSHOT/util-1.5-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/testng/testng/6.8.8/testng-6.8.8.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/com/beust/jcommander/1.27/jcommander-1.27.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/mockito/mockito-all/1.10.8/mockito-all-1.10.8.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-logging/8.2.1.Final/wildfly-logging-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/staxmapper/1.1.0.Final/staxmapper-1.1.0.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/jboss-vfs/3.2.5.Final/jboss-vfs-3.2.5.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-controller/8.2.1.Final/wildfly-controller-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/jboss-dmr/1.2.0.Final/jboss-dmr-1.2.0.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-controller-client/8.2.1.Final/wildfly-controller-client-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-protocol/8.2.1.Final/wildfly-protocol-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-core-security/8.2.1.Final/wildfly-core-security-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-core-security-api/8.2.1.Final/wildfly-core-security-api-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/modules/jboss-modules/1.3.3.Final/jboss-modules-1.3.3.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/security/wildfly-security-manager/1.0.0.Final/wildfly-security-manager-1.0.0.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-server/8.2.1.Final/wildfly-server-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-domain-http-interface/8.2.1.Final/wildfly-domain-http-interface-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-domain-management/8.2.1.Final/wildfly-domain-management-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/jboss-common-core/2.2.22.GA/jboss-common-core-2.2.22.GA.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-deployment-repository/8.2.1.Final/wildfly-deployment-repository-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-patching/8.2.1.Final/wildfly-patching-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-cli/8.2.1.Final/wildfly-cli-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/aesh/aesh/0.33.11/aesh-0.33.11.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/fusesource/jansi/jansi/1.9/jansi-1.9.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/remotingjmx/remoting-jmx/2.0.0.Final/remoting-jmx-2.0.0.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/marshalling/jboss-marshalling-river/1.4.2.Final/jboss-marshalling-river-1.4.2.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/usr/lib/jvm/java-8-openjdk-amd64/lib/jconsole.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-platform-mbean/8.2.1.Final/wildfly-platform-mbean-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-process-controller/8.2.1.Final/wildfly-process-controller-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-remoting/8.2.1.Final/wildfly-remoting-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-io/8.2.1.Final/wildfly-io-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/xnio/xnio-api/3.3.0.Final/xnio-api-3.3.0.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-network/8.2.1.Final/wildfly-network-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-version/8.2.1.Final/wildfly-version-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/jandex/1.2.1.Final/jandex-1.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/invocation/jboss-invocation/1.2.1.Final/jboss-invocation-1.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/marshalling/jboss-marshalling/1.4.9.Final/jboss-marshalling-1.4.9.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/remoting/jboss-remoting/4.0.7.Final/jboss-remoting-4.0.7.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/sasl/jboss-sasl/1.0.4.Final/jboss-sasl-1.0.4.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/threads/jboss-threads/2.1.1.Final/jboss-threads-2.1.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/io/undertow/undertow-core/1.1.8.Final/undertow-core-1.1.8.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/xnio/xnio-nio/3.3.0.Final/xnio-nio-3.3.0.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/logging/jboss-logging/3.1.4.GA/jboss-logging-3.1.4.GA.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/logmanager/jboss-logmanager/1.5.2.Final/jboss-logmanager-1.5.2.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/logmanager/log4j-jboss-logmanager/1.1.0.Final/log4j-jboss-logmanager-1.1.0.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/msc/jboss-msc/1.2.2.Final/jboss-msc-1.2.2.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/jboss/stdio/jboss-stdio/1.0.2.GA/jboss-stdio-1.0.2.GA.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/org/wildfly/wildfly-build-config/8.2.1.Final/wildfly-build-config-8.2.1.Final.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/javax/javaee-web-api/7.0/javaee-web-api-7.0.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/eu/portcdm/message-broker-dto/1.5-SNAPSHOT/message-broker-dto-1.5-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/eu/portcdm/portcdm-specification/1.5-SNAPSHOT/portcdm-specification-1.5-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/joda-time/joda-time/2.3/joda-time-2.3.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/com/brsanthu/migbase64/2.2/migbase64-2.2.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/com/squareup/okhttp/okhttp/2.4.0/okhttp-2.4.0.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/com/squareup/okio/okio/1.4.0/okio-1.4.0.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/junit/junit/4.5/junit-4.5.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/filip/.m2/repository/eu/portcdm/message-broker-client/1.5-SNAPSHOT/message-broker-client-1.5-SNAPSHOT.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar</AuxClasspathEntry>
+    <SrcDir>/pilotApplication/src/test/java</SrcDir>
+    <SrcDir>/home/filip/git/Software-Engineering-Project/pilotApplication/src/main/resources</SrcDir>
+    <SrcDir>/home/filip/git/Software-Engineering-Project/pilotApplication/src/main/java</SrcDir>
+    <Cloud id="edu.umd.cs.findbugs.cloud.doNothingCloud" online="false"></Cloud>
+  </Project>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Wed, 31 May 2017 22:02:13 +0200" total_classes="5" referenced_classes="72" total_bugs="0" total_size="581" num_packages="1" java_version="1.8.0_131" vm_version="25.131-b11" cpu_seconds="11.33" clock_seconds="24.13" peak_mbytes="905.79" alloc_mbytes="1024.00" gc_seconds="0.08">
+    <PackageStats package="pilotapplication" total_bugs="0" total_types="5" total_size="581">
+      <ClassStats class="pilotapplication.Controller" sourceFile="Controller.java" interface="false" size="278" bugs="0"/>
+      <ClassStats class="pilotapplication.Main" sourceFile="Main.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="pilotapplication.PortCDMApi" sourceFile="PortCDMApi.java" interface="false" size="224" bugs="0"/>
+      <ClassStats class="pilotapplication.PortCallInfo" sourceFile="PortCallInfo.java" interface="false" size="44" bugs="0"/>
+      <ClassStats class="pilotapplication.PortCallSummaryUtils" sourceFile="PortCallSummaryUtils.java" interface="false" size="22" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="203" invocations="724" avgMicrosecondsPerInvocation="280" maxMicrosecondsPerInvocation="54167" standardDeviationMircosecondsPerInvocation="2046"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="115" invocations="726" avgMicrosecondsPerInvocation="159" maxMicrosecondsPerInvocation="34707" standardDeviationMircosecondsPerInvocation="1288"/>
+      <ClassProfile name="de.tobject.findbugs.builder.FindBugs2Eclipse" totalMilliseconds="107" invocations="2" avgMicrosecondsPerInvocation="53797" maxMicrosecondsPerInvocation="76072" standardDeviationMircosecondsPerInvocation="22274"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="95" invocations="60" avgMicrosecondsPerInvocation="1585" maxMicrosecondsPerInvocation="50770" standardDeviationMircosecondsPerInvocation="6630"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="75" invocations="60" avgMicrosecondsPerInvocation="1258" maxMicrosecondsPerInvocation="15485" standardDeviationMircosecondsPerInvocation="2786"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="65" invocations="72" avgMicrosecondsPerInvocation="905" maxMicrosecondsPerInvocation="5009" standardDeviationMircosecondsPerInvocation="1273"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="63" invocations="66" avgMicrosecondsPerInvocation="958" maxMicrosecondsPerInvocation="10041" standardDeviationMircosecondsPerInvocation="1965"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="63" invocations="65" avgMicrosecondsPerInvocation="971" maxMicrosecondsPerInvocation="12770" standardDeviationMircosecondsPerInvocation="2389"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="57" invocations="60" avgMicrosecondsPerInvocation="961" maxMicrosecondsPerInvocation="11748" standardDeviationMircosecondsPerInvocation="1895"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="53" invocations="72" avgMicrosecondsPerInvocation="739" maxMicrosecondsPerInvocation="4262" standardDeviationMircosecondsPerInvocation="1116"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="52" invocations="305" avgMicrosecondsPerInvocation="170" maxMicrosecondsPerInvocation="4405" standardDeviationMircosecondsPerInvocation="320"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory" totalMilliseconds="48" invocations="72" avgMicrosecondsPerInvocation="675" maxMicrosecondsPerInvocation="1703" standardDeviationMircosecondsPerInvocation="315"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="32" invocations="60" avgMicrosecondsPerInvocation="546" maxMicrosecondsPerInvocation="6995" standardDeviationMircosecondsPerInvocation="1116"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.StreamResourceTracker" totalMilliseconds="29" invocations="19" avgMicrosecondsPerInvocation="1576" maxMicrosecondsPerInvocation="10250" standardDeviationMircosecondsPerInvocation="2916"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison$SpecialTypeAnalysis" totalMilliseconds="28" invocations="50" avgMicrosecondsPerInvocation="567" maxMicrosecondsPerInvocation="6326" standardDeviationMircosecondsPerInvocation="1069"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindOpenStream" totalMilliseconds="24" invocations="5" avgMicrosecondsPerInvocation="4979" maxMicrosecondsPerInvocation="15863" standardDeviationMircosecondsPerInvocation="6347"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.LoadOfKnownNullValue" totalMilliseconds="22" invocations="5" avgMicrosecondsPerInvocation="4426" maxMicrosecondsPerInvocation="16915" standardDeviationMircosecondsPerInvocation="6449"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DumbMethods" totalMilliseconds="20" invocations="5" avgMicrosecondsPerInvocation="4079" maxMicrosecondsPerInvocation="15001" standardDeviationMircosecondsPerInvocation="5751"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="17" invocations="72" avgMicrosecondsPerInvocation="243" maxMicrosecondsPerInvocation="4707" standardDeviationMircosecondsPerInvocation="599"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="16" invocations="72" avgMicrosecondsPerInvocation="231" maxMicrosecondsPerInvocation="1435" standardDeviationMircosecondsPerInvocation="287"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="16" invocations="664" avgMicrosecondsPerInvocation="24" maxMicrosecondsPerInvocation="390" standardDeviationMircosecondsPerInvocation="38"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildStringPassthruGraph" totalMilliseconds="14" invocations="72" avgMicrosecondsPerInvocation="203" maxMicrosecondsPerInvocation="2354" standardDeviationMircosecondsPerInvocation="372"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="13" invocations="72" avgMicrosecondsPerInvocation="192" maxMicrosecondsPerInvocation="2162" standardDeviationMircosecondsPerInvocation="333"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindHEmismatch" totalMilliseconds="13" invocations="5" avgMicrosecondsPerInvocation="2675" maxMicrosecondsPerInvocation="12048" standardDeviationMircosecondsPerInvocation="4700"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History>
+    <AppVersion sequence="0" timestamp="1496261494164" release="" codeSize="0" numClasses="0"/>
+  </History>
+</BugCollection>
