@@ -1,0 +1,23 @@
+Statistical information for the repository 'Software-Engineering-Project' was
+gathered on 2017/06/01.
+The following historical commit information, by author, was found in the
+repository:
+
+Author                     Commits    Insertions      Deletions    % of changes
+Filip                            2            56              6            2.12
+Filip Lindahl                   16           383            101           16.53
+Flissaker                        5           100             48            5.05
+filipni                         45          1351            749           71.72
+henriktran                       4            34             20            1.84
+poseidon                         3            54             26            2.73
+
+Below are the number of rows from each author that have survived and are still
+intact in the current revision:
+
+Author                     Rows      Stability          Age       % in comments
+Filip                        17           30.4          0.0                0.00
+Filip Lindahl               206           53.8          0.3                7.28
+Flissaker                     6            6.0          0.9                0.00
+filipni                     788           58.3          0.6               15.74
+henriktran                   13           38.2          0.4                0.00
+poseidon                      1            1.9          1.1                0.00
